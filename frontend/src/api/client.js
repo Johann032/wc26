@@ -1,5 +1,8 @@
 const API_BASE = import.meta.env.VITE_API_URL || "/api";
 
+console.log("VITE_API_URL =", import.meta.env.VITE_API_URL);
+console.log("API_BASE =", API_BASE);
+
 let onUnauthorized = null;
 
 export function setUnauthorizedHandler(handler) {
@@ -95,4 +98,10 @@ export const api = {
       method: "POST",
       body: JSON.stringify(tournamentId ? { tournament_id: tournamentId } : {}),
     }),
+
+    const API_BASE = import.meta.env.VITE_API_URL || "/api";
+
+console.log("VITE_API_URL =", import.meta.env.VITE_API_URL);
+console.log("API_BASE =", API_BASE);
 };
+
