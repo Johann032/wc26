@@ -98,10 +98,5 @@ export const api = {
       method: "POST",
       body: JSON.stringify(tournamentId ? { tournament_id: tournamentId } : {}),
     }),
-
-    const API_BASE = import.meta.env.VITE_API_URL || "/api";
-
-console.log("VITE_API_URL =", import.meta.env.VITE_API_URL);
-console.log("API_BASE =", API_BASE);
 };
 
