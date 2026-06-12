@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://wc26-k6vi.onrender.com/api/$1"
+      "source": "/api/:path*",
+      "destination": "https://wc26-k6wi.onrender.com/api/:path*"
     },
     {
       "source": "/(.*)",
