@@ -70,8 +70,7 @@ class QuestionService:
     if not question:
       return None, "Question not found"
 
-    if self.locking_service.ensure_question_lock_state(question):
-      return None, "Cannot edit a locked question"
+    self.locking_service.ensure_question_lock_state(question)
 
     updates = {}
     if "question_text" in data and data["question_text"]:
@@ -113,8 +112,7 @@ class QuestionService:
     question = self.repository.get_by_id(question_id)
     if not question:
       return False, "Question not found"
-    if self.locking_service.ensure_question_lock_state(question):
-      return False, "Cannot delete a locked question"
+    self.locking_service.ensure_question_lock_state(question)
     self.repository.delete(question)
     return True, None
 

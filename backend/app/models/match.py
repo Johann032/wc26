@@ -33,7 +33,7 @@ class Match(TimestampMixin, db.Model):
       "tournament_id": self.tournament_id,
       "team1": self.team1,
       "team2": self.team2,
-      "kickoff_time": self.kickoff_time.isoformat(),
+      "kickoff_time": self.kickoff_time.isoformat() + ("Z" if self.kickoff_time.tzinfo is None else ""),
       "status": self.status,
       "score1": self.score1,
       "score2": self.score2,
