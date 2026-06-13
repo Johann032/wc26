@@ -50,7 +50,7 @@ def submit_prediction():
   if error:
     if error == "Question not found":
       return jsonify({"error": error}), 404
-    if error == "Question is locked":
+    if error == "Predictions are locked because this match has already started." or "locked" in error.lower():
       return jsonify({"error": error}), 423
     if error == "Authentication required":
       return jsonify({"error": error}), 401

@@ -2,6 +2,7 @@ from app.extensions import db
 from app.models.prediction_question import PredictionQuestion
 from app.repositories.match_repository import MatchRepository
 from app.utils.time import ensure_utc, server_now
+from datetime import timedelta
 
 
 class LockingService:
@@ -11,7 +12,8 @@ class LockingService:
       return
 
     kickoff = ensure_utc(match.kickoff_time)
-    should_lock = server_now() >= kickoff
+    lock_time = kickoff - timedelta(minutes=5)
+    should_lock = server_now() >= lock_time or match.status.lower() in ("live", "finished")
 
     questions = PredictionQuestion.query.filter_by(match_id=match_id).all()
     changed = False
@@ -35,8 +37,13 @@ class LockingService:
     match = MatchRepository.get_by_id(question.match_id)
     if not match:
       return True
+      
+    if match.status.lower() in ("live", "finished"):
+      return True
+      
     kickoff = ensure_utc(match.kickoff_time)
-    return server_now() >= kickoff
+    lock_time = kickoff - timedelta(minutes=5)
+    return server_now() >= lock_time
 
   def ensure_question_lock_state(self, question, commit=False):
     locked = self.is_question_locked(question)

@@ -46,7 +46,7 @@ class PredictionService:
       return None, None, "Question not found"
 
     if self.locking_service.ensure_question_lock_state(question):
-      return None, None, "Question is locked"
+      return None, None, "Predictions are locked because this match has already started."
 
     try:
       normalized = ValidationService.validate_answer(question, answer)

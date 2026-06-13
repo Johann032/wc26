@@ -44,17 +44,17 @@ export default function TournamentPage() {
   }
 
   return (
-    <div className="tournament-page">
+    <div className="bg-page-wrapper">
+      <div className="bg-image bg-ronaldo"></div>
+      <div className="bg-overlay"></div>
+      <div className="content-relative tournament-page">
       {/* Breadcrumb */}
       <Link to="/" className="breadcrumb animate-in">
         <ChevronLeft size={16} /> Back to tournaments
       </Link>
 
       {/* Tournament Header */}
-      <header className="hero-bg-container premium-page-header animate-in animate-in-delay-1">
-        <div className="hero-bg-stadium" />
-        <div className="hero-gradient-overlay" />
-        <div className="content-relative">
+      <header className="premium-page-header animate-in animate-in-delay-1">
           <h1 className="tournament-header__name">{tournament.name}</h1>
           <p className="tournament-header__dates">
             {tournament.start_date} &mdash; {tournament.end_date}
@@ -65,7 +65,6 @@ export default function TournamentPage() {
           >
             {tournament.status}
           </span>
-        </div>
       </header>
 
       {/* Matches */}
@@ -123,6 +122,7 @@ export default function TournamentPage() {
           View Leaderboard
           <ChevronRight size={18} />
         </Link>
+      </div>
       </div>
     </div>
   );

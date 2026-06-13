@@ -94,7 +94,10 @@ export default function MatchDetailsPage() {
     match.status === "scheduled" && new Date(match.kickoff_time) > new Date();
 
   return (
-    <div>
+    <div className="bg-page-wrapper">
+      <div className="bg-image bg-messi"></div>
+      <div className="bg-overlay"></div>
+      <div className="content-relative">
       <Link to={`/tournaments/${match.tournament_id}`} className="breadcrumb">
         <ChevronLeft size={16} /> Back to tournament
       </Link>
@@ -139,7 +142,14 @@ export default function MatchDetailsPage() {
       {questions?.length === 0 ? (
         <div className="empty-state">No questions for this match yet.</div>
       ) : (
-        questions?.map((question, i) => (
+        questions?.map((question, i) => {
+          const isLocked =
+            question.locked ||
+            match.status === "live" ||
+            match.status === "finished" ||
+            new Date() >= new Date(new Date(match.kickoff_time).getTime() - 5 * 60000);
+
+          return (
           <div
             key={question.id}
             className={`card animate-in animate-in-delay-${Math.min(i + 1, 4)}`}
@@ -147,7 +157,7 @@ export default function MatchDetailsPage() {
             <h3>{question.question_text}</h3>
             <p className="card__meta">
               {question.question_type} · {question.point_value} pts
-              {question.locked && (
+              {isLocked && (
                 <span className="badge badge--warning" style={{ marginLeft: "0.5rem" }}>
                   Locked
                 </span>
@@ -157,10 +167,13 @@ export default function MatchDetailsPage() {
               question={question}
               existingAnswer={predictionMap[question.id]}
               onSaved={handleSaved}
+              isLocked={isLocked}
             />
           </div>
-        ))
+          );
+        })
       )}
+      </div>
     </div>
   );
 }

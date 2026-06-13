@@ -55,11 +55,11 @@ export default function LeaderboardPage() {
   };
 
   return (
-    <div>
-      <header className="hero-bg-container premium-page-header">
-        <div className="hero-bg-leaderboard" />
-        <div className="hero-gradient-overlay" />
-        <div className="content-relative">
+    <div className="bg-page-wrapper">
+      <div className="bg-image bg-crowd"></div>
+      <div className="bg-overlay"></div>
+      <div className="content-relative">
+        <header className="premium-page-header">
           <h1 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }}>
             <Trophy size={28} style={{ color: "var(--color-gold)" }} />
             Leaderboard
@@ -70,8 +70,7 @@ export default function LeaderboardPage() {
               onChange={(id) => setTournamentId(id)}
             />
           </div>
-        </div>
-      </header>
+        </header>
 
       {loading && (
         <div>
@@ -156,6 +155,7 @@ export default function LeaderboardPage() {
           </div>
         </>
       )}
+      </div>
     </div>
   );
 }

@@ -9,16 +9,15 @@ export default function HomePage() {
   const { user } = useAuth();
 
   return (
-    <div className="home-page">
-      {/* Hero Banner */}
-      <section className="hero-bg-container premium-page-header premium-page-header--gold">
-        <div className="hero-bg-legends" />
-        <div className="hero-gradient-overlay" />
-        <div className="content-relative">
+    <div className="bg-page-wrapper">
+      <div className="bg-image bg-trophy"></div>
+      <div className="bg-overlay"></div>
+      <div className="content-relative home-page">
+        {/* Hero Header */}
+        <header className="premium-page-header premium-page-header--gold">
           <h1>GUPPY WORLD CUP 2026</h1>
           <p>Predict. Compete. Win.</p>
-        </div>
-      </section>
+        </header>
 
       {/* Welcome Section */}
       {user && (
@@ -92,6 +91,7 @@ export default function HomePage() {
             </Link>
           ))
         )}
+      </div>
       </div>
     </div>
   );

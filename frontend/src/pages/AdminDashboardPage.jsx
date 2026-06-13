@@ -335,7 +335,10 @@ export default function AdminDashboardPage() {
   ];
 
   return (
-    <div>
+    <div className="bg-page-wrapper">
+      <div className="bg-image bg-tunnel"></div>
+      <div className="bg-overlay"></div>
+      <div className="content-relative admin-dashboard">
       <header className="page-header">
         <h1 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <BarChart3 size={24} style={{ color: "var(--color-gold)" }} />
@@ -654,6 +657,7 @@ export default function AdminDashboardPage() {
           )}
         </div>
       )}
+      </div>
     </div>
   );
 }

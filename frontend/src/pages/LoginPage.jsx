@@ -41,54 +41,57 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="login-page">
-      <div className="login-brand animate-in">
-        <Trophy size={48} strokeWidth={1.5} style={{ color: '#D4AF37' }} />
-        <h1 className="login-brand__title">GUPPY WORLD CUP 2026</h1>
-        <p className="login-brand__tagline">PREDICT. COMPETE. WIN.</p>
-      </div>
+    <div className="bg-page-wrapper">
+      <div className="bg-image bg-stadium-night"></div>
+      <div className="bg-overlay"></div>
+      <div className="content-relative login-page">
+        <div className="login-brand animate-in">
+          <h1 className="login-brand__title">GUPPY WORLD CUP 2026</h1>
+          <p className="login-brand__tagline">PREDICT. COMPETE. WIN.</p>
+        </div>
 
-      <div className="login-card card card--glass animate-in">
-        <h2>Sign In</h2>
-        <p className="login-card__subtitle">Enter your display name and PIN to continue</p>
+        <div className="login-card card card--glass animate-in">
+          <h2>Sign In</h2>
+          <p className="login-card__subtitle">Enter your display name and PIN to continue</p>
 
-        <Alert type="error" message={error} onClose={() => setError(null)} />
+          <Alert type="error" message={error} onClose={() => setError(null)} />
 
-        <form onSubmit={handleSubmit} className="form">
-          <label className="form-label">
-            Display Name
-            <div className="input-wrapper">
-              <User size={18} className="input-icon" />
-              <input
-                type="text"
-                className="input input--with-icon"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                required
-                autoComplete="username"
-              />
-            </div>
-          </label>
+          <form onSubmit={handleSubmit} className="form">
+            <label className="form-label">
+              Display Name
+              <div className="input-wrapper">
+                <User size={18} className="input-icon" />
+                <input
+                  type="text"
+                  className="input input--with-icon"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  required
+                  autoComplete="username"
+                />
+              </div>
+            </label>
 
-          <label className="form-label">
-            PIN
-            <div className="input-wrapper">
-              <Lock size={18} className="input-icon" />
-              <input
-                type="password"
-                className="input input--with-icon"
-                value={pin}
-                onChange={(e) => setPin(e.target.value)}
-                required
-                autoComplete="current-password"
-              />
-            </div>
-          </label>
+            <label className="form-label">
+              PIN
+              <div className="input-wrapper">
+                <Lock size={18} className="input-icon" />
+                <input
+                  type="password"
+                  className="input input--with-icon"
+                  value={pin}
+                  onChange={(e) => setPin(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                />
+              </div>
+            </label>
 
-          <button type="submit" className="btn btn--primary btn--block" disabled={submitting}>
-            {submitting ? "Signing in..." : "Sign In"}
-          </button>
-        </form>
+            <button type="submit" className="btn btn--primary btn--block" disabled={submitting}>
+              {submitting ? "Signing in..." : "Sign In"}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

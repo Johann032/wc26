@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { api } from "../api/client";
 import { Lock, CheckCircle, XCircle, Send } from "lucide-react";
 
-export default function PredictionForm({ question, existingAnswer, onSaved }) {
+export default function PredictionForm({ question, existingAnswer, onSaved, isLocked }) {
   const [answer, setAnswer] = useState(existingAnswer || "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
@@ -14,7 +14,7 @@ export default function PredictionForm({ question, existingAnswer, onSaved }) {
     setSuccess(false);
   }, [existingAnswer, question.id]);
 
-  if (question.locked) {
+  if (isLocked) {
     return (
       <div className="prediction-form__locked">
         <Lock size={16} style={{ flexShrink: 0 }} />
