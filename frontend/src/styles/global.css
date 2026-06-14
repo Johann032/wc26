@@ -559,7 +559,6 @@ tr:hover td {
   justify-content: center;
   padding: 1.5rem;
   position: relative;
-  overflow: hidden;
   background: #0B0B0B;
 }
 
@@ -1512,7 +1511,7 @@ tr:hover td {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   z-index: -2;
   background-size: cover;
   background-position: center;
@@ -1533,7 +1532,7 @@ tr:hover td {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   z-index: -1;
   background: linear-gradient(to bottom, rgba(11, 15, 25, 0.75), rgba(11, 15, 25, 0.90));
   pointer-events: none;
