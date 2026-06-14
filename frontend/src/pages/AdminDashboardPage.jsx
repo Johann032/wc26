@@ -256,11 +256,6 @@ export default function AdminDashboardPage() {
 
   const handleCreateQuestion = async (e) => {
     e.preventDefault();
-    const pointValue = Number(questionForm.point_value);
-    if (!pointValue || pointValue < 1) {
-      notify("Point value must be at least 1", "error");
-      return;
-    }
     const choices = questionForm.choices.split(",").map((c) => c.trim()).filter(Boolean);
     if (["winner", "multiple_choice"].includes(questionForm.question_type) && choices.length === 0) {
       notify("At least one choice is required for this question type", "error");
@@ -271,7 +266,7 @@ export default function AdminDashboardPage() {
         match_id: Number(questionForm.match_id),
         question_text: questionForm.question_text,
         question_type: questionForm.question_type,
-        point_value: pointValue,
+        point_value: 1,
       };
       if (["winner", "multiple_choice"].includes(questionForm.question_type)) {
         payload.options_json = { choices };
@@ -602,7 +597,6 @@ export default function AdminDashboardPage() {
                     {QUESTION_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
                   </select>
                 </label>
-                <label className="form-label">Points<input type="number" min="1" required className="input" value={questionForm.point_value} onChange={(e) => setQuestionForm({ ...questionForm, point_value: e.target.value })} /></label>
                 {["winner", "multiple_choice"].includes(questionForm.question_type) && (
                   <label className="form-label">Choices (comma-separated)<input className="input" value={questionForm.choices} onChange={(e) => setQuestionForm({ ...questionForm, choices: e.target.value })} /></label>
                 )}
