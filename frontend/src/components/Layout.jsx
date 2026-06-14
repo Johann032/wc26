@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { Home, Target, Trophy, Shield, LogOut, User } from "lucide-react";
+import { Home, Target, Trophy, Shield, LogOut, User, Key } from "lucide-react";
 import "./Layout.css";
 
 const navItems = [
@@ -83,6 +83,15 @@ export default function Layout({ children }) {
               {getInitials(user?.display_name)}
             </div>
             <span className="layout__username">{user?.display_name}</span>
+            <button
+              type="button"
+              className="layout__logout-btn"
+              onClick={() => navigate("/change-pin")}
+              aria-label="Change PIN"
+              style={{ marginRight: '0.5rem' }}
+            >
+              <Key size={16} />
+            </button>
             <button
               type="button"
               className="layout__logout-btn"

@@ -11,6 +11,7 @@ class User(TimestampMixin, db.Model):
   pin_hash = db.Column(db.String(255), nullable=False)
   active = db.Column(db.Boolean, nullable=False, default=True)
   is_admin = db.Column(db.Boolean, nullable=False, default=False)
+  force_pin_change = db.Column(db.Boolean, nullable=False, default=False)
 
   predictions = db.relationship("Prediction", back_populates="user", lazy="dynamic")
 
@@ -23,6 +24,7 @@ class User(TimestampMixin, db.Model):
       "id": self.id,
       "display_name": self.display_name,
       "active": self.active,
+      "force_pin_change": self.force_pin_change,
       "created_at": self.created_at.isoformat() if self.created_at else None,
       "updated_at": self.updated_at.isoformat() if self.updated_at else None,
     }

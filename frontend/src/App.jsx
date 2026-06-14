@@ -9,6 +9,7 @@ import MatchDetailsPage from "./pages/MatchDetailsPage";
 import PredictionsPage from "./pages/PredictionsPage";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
+import ChangePinPage from "./pages/ChangePinPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
                 <Route path="/matches/:matchId" element={<MatchDetailsPage />} />
                 <Route path="/predictions" element={<PredictionsPage />} />
                 <Route path="/leaderboard" element={<LeaderboardPage />} />
+                <Route path="/change-pin" element={<ChangePinPage />} />
                 <Route
                   path="/admin"
                   element={

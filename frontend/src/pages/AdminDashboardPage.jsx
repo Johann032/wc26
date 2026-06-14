@@ -4,7 +4,7 @@ import { useFetch } from "../hooks/useFetch";
 import Alert from "../components/Alert";
 import {
   BarChart3, Trophy, Users, Swords, HelpCircle, CheckSquare,
-  Plus, Trash2, Save, Archive, RefreshCw, UserPlus, UserCheck, UserX,
+  Plus, Trash2, Save, Archive, RefreshCw, UserPlus, UserCheck, UserX, Key,
 } from "lucide-react";
 
 const QUESTION_TYPES = ["winner", "exact_score", "multiple_choice", "yes_no", "number"];
@@ -480,6 +480,27 @@ export default function AdminDashboardPage() {
                       )}
                     </td>
                     <td>
+                      <button
+                        type="button"
+                        className="btn btn--small btn--primary"
+                        style={{ marginRight: '0.5rem' }}
+                        onClick={async () => {
+                          const newPin = window.prompt(`Enter new temporary PIN for ${u.display_name}:`);
+                          if (!newPin) return;
+                          if (newPin.length < 4) {
+                            alert("PIN must be at least 4 digits");
+                            return;
+                          }
+                          try {
+                            await api.updateUser(u.id, { pin: newPin });
+                            notify(`PIN reset for ${u.display_name}`);
+                          } catch (err) {
+                            notify(err.message, "error");
+                          }
+                        }}
+                      >
+                        <Key size={14} /> Reset PIN
+                      </button>
                       <button
                         type="button"
                         className={`btn btn--small ${u.active ? "btn--danger" : "btn--primary"}`}

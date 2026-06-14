@@ -33,6 +33,11 @@ export const api = {
     }),
   logout: () => request("/auth/logout", { method: "POST" }),
   getMe: () => request("/auth/me"),
+  changePin: (old_pin, new_pin) =>
+    request("/auth/change-pin", {
+      method: "POST",
+      body: JSON.stringify({ old_pin, new_pin }),
+    }),
 
   getTournaments: (includeArchived = false) =>
     request(`/tournaments?include_archived=${includeArchived}`),

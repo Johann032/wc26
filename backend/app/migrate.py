@@ -12,7 +12,8 @@ logger = logging.getLogger(__name__)
 MIGRATIONS = [
   ("users", "pin_hash", "VARCHAR(255)"),
   ("users", "display_name_lower", "VARCHAR(80)"),
-  ("users", "is_admin", "BOOLEAN DEFAULT 0"),
+  ("users", "is_admin", "BOOLEAN DEFAULT FALSE"),
+  ("users", "force_pin_change", "BOOLEAN DEFAULT FALSE"),
   ("users", "updated_at", "DATETIME"),
   ("tournaments", "created_at", "DATETIME"),
   ("tournaments", "updated_at", "DATETIME"),

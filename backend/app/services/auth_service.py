@@ -95,6 +95,7 @@ class AuthService:
       if pin_error:
         return None, pin_error
       user.pin_hash = hash_pin(data["pin"])
+      user.force_pin_change = True
 
     becoming_inactive = "active" in data and not bool(data["active"])
     losing_admin = "is_admin" in data and not bool(data["is_admin"])
@@ -134,3 +135,27 @@ class AuthService:
     if other_admins == 0:
       return "Cannot deactivate or demote the last active admin"
     return None
+
+  def change_pin(self, user_id, old_pin, new_pin, ignore_old_pin=False):
+    user = UserRepository.get_by_id(user_id)
+    if not user:
+      return None, "User not found"
+      
+    if not ignore_old_pin:
+      if not verify_pin(old_pin, user.pin_hash):
+        return None, "Incorrect current PIN"
+
+    pin_error = self._validate_pin(new_pin)
+    if pin_error:
+      return None, pin_error
+
+    user.pin_hash = hash_pin(new_pin)
+    user.force_pin_change = False
+    
+    try:
+      db.session.commit()
+    except IntegrityError:
+      rollback()
+      return None, "Database error"
+      
+    return user, None
