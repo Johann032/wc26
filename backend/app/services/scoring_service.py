@@ -18,23 +18,31 @@ class ScoringService:
     if not user_answer:
       return 0
 
+    stage = question.match.stage if question.match else "GROUP"
+    if stage in ("SF", "THIRD_PLACE", "FINAL"):
+      correct_points = 3
+      wrong_points = -2
+    else:
+      correct_points = 3
+      wrong_points = 0
+
     if question.question_type == "exact_score":
       user_norm = self._safe_normalize_score(user_answer)
       correct_norm = self._safe_normalize_score(correct)
       if user_norm is None or correct_norm is None:
-        return -2
-      return 5 if user_norm == correct_norm else -2
+        return wrong_points
+      return correct_points if user_norm == correct_norm else wrong_points
 
     if question.question_type == "number":
       try:
-        return 5 if int(user_answer) == int(correct) else -2
+        return correct_points if int(user_answer) == int(correct) else wrong_points
       except ValueError:
-        return -2
+        return wrong_points
 
     if question.question_type == "yes_no":
-      return 5 if self._normalize_yes_no(user_answer) == self._normalize_yes_no(correct) else -2
+      return correct_points if self._normalize_yes_no(user_answer) == self._normalize_yes_no(correct) else wrong_points
 
-    return 5 if user_answer.lower() == correct.lower() else -2
+    return correct_points if user_answer.lower() == correct.lower() else wrong_points
 
   def recalculate_for_tournament(self, tournament_id):
     tournament = TournamentRepository.get_by_id(tournament_id)

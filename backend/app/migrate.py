@@ -19,6 +19,7 @@ MIGRATIONS = [
   ("tournaments", "updated_at", "DATETIME"),
   ("matches", "created_at", "DATETIME"),
   ("matches", "updated_at", "DATETIME"),
+  ("matches", "stage", "VARCHAR(50) DEFAULT 'GROUP'"),
   ("prediction_questions", "correct_answer", "VARCHAR(255)"),
   ("prediction_questions", "created_at", "DATETIME"),
   ("prediction_questions", "updated_at", "DATETIME"),

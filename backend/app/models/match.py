@@ -16,6 +16,7 @@ class Match(TimestampMixin, db.Model):
   team2 = db.Column(db.String(80), nullable=False)
   kickoff_time = db.Column(db.DateTime, nullable=False)
   status = db.Column(db.String(20), nullable=False, default="scheduled")
+  stage = db.Column(db.String(50), nullable=False, default="GROUP", server_default="GROUP")
   score1 = db.Column(db.Integer, nullable=True)
   score2 = db.Column(db.Integer, nullable=True)
 
@@ -35,6 +36,7 @@ class Match(TimestampMixin, db.Model):
       "team2": self.team2,
       "kickoff_time": self.kickoff_time.isoformat() + ("Z" if self.kickoff_time.tzinfo is None else ""),
       "status": self.status,
+      "stage": self.stage,
       "score1": self.score1,
       "score2": self.score2,
       "created_at": self.created_at.isoformat() if self.created_at else None,

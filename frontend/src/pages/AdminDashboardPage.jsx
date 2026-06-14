@@ -28,6 +28,7 @@ function MatchEditor({ match, onSave, onDelete }) {
     team2: match.team2,
     kickoff_time: toDatetimeLocal(match.kickoff_time),
     status: match.status,
+    stage: match.stage || "GROUP",
     score1: match.score1 ?? "",
     score2: match.score2 ?? "",
   });
@@ -38,6 +39,7 @@ function MatchEditor({ match, onSave, onDelete }) {
       team2: match.team2,
       kickoff_time: toDatetimeLocal(match.kickoff_time),
       status: match.status,
+      stage: match.stage || "GROUP",
       score1: match.score1 ?? "",
       score2: match.score2 ?? "",
     });
@@ -63,14 +65,28 @@ function MatchEditor({ match, onSave, onDelete }) {
         Kickoff
         <input type="datetime-local" className="input" value={form.kickoff_time} onChange={(e) => setForm({ ...form, kickoff_time: e.target.value })} />
       </label>
-      <label className="form-label">
-        Status
-        <select className="input" value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })}>
-          <option value="scheduled">scheduled</option>
-          <option value="live">live</option>
-          <option value="finished">finished</option>
-        </select>
-      </label>
+      <div className="form-row">
+        <label className="form-label">
+          Status
+          <select className="input" value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })}>
+            <option value="scheduled">scheduled</option>
+            <option value="live">live</option>
+            <option value="finished">finished</option>
+          </select>
+        </label>
+        <label className="form-label">
+          Stage
+          <select className="input" value={form.stage} onChange={(e) => setForm({ ...form, stage: e.target.value })}>
+            <option value="GROUP">GROUP</option>
+            <option value="R32">R32</option>
+            <option value="R16">R16</option>
+            <option value="QF">QF</option>
+            <option value="SF">SF</option>
+            <option value="THIRD_PLACE">THIRD_PLACE</option>
+            <option value="FINAL">FINAL</option>
+          </select>
+        </label>
+      </div>
       <div className="form-row">
         <label className="form-label">
           Score 1
@@ -108,6 +124,7 @@ function emptyMatchForm(tournamentId) {
     team2: "",
     kickoff_time: "",
     status: "scheduled",
+    stage: "GROUP",
     score1: "",
     score2: "",
   };
@@ -550,7 +567,20 @@ export default function AdminDashboardPage() {
                   <label className="form-label">Team 1<input className="input" value={matchForm.team1} onChange={(e) => setMatchForm({ ...matchForm, team1: e.target.value })} required /></label>
                   <label className="form-label">Team 2<input className="input" value={matchForm.team2} onChange={(e) => setMatchForm({ ...matchForm, team2: e.target.value })} required /></label>
                 </div>
-                <label className="form-label">Kickoff (local time)<input type="datetime-local" className="input" value={matchForm.kickoff_time} onChange={(e) => setMatchForm({ ...matchForm, kickoff_time: e.target.value })} required /></label>
+                <div className="form-row">
+                  <label className="form-label">Kickoff (local time)<input type="datetime-local" className="input" value={matchForm.kickoff_time} onChange={(e) => setMatchForm({ ...matchForm, kickoff_time: e.target.value })} required /></label>
+                  <label className="form-label">Stage
+                    <select className="input" value={matchForm.stage} onChange={(e) => setMatchForm({ ...matchForm, stage: e.target.value })}>
+                      <option value="GROUP">GROUP</option>
+                      <option value="R32">R32</option>
+                      <option value="R16">R16</option>
+                      <option value="QF">QF</option>
+                      <option value="SF">SF</option>
+                      <option value="THIRD_PLACE">THIRD_PLACE</option>
+                      <option value="FINAL">FINAL</option>
+                    </select>
+                  </label>
+                </div>
                 <button type="submit" className="btn btn--primary"><Plus size={16} /> Create</button>
               </form>
               {loadingMatches && <p className="loading-inline">Loading matches...</p>}
