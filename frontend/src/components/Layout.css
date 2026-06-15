@@ -178,8 +178,8 @@
   opacity: 0.7;
 }
 
-/* ── Bottom Nav (mobile) ── */
-.layout__bottom-nav {
+/* ── Mobile Top Nav (desktop hidden) ── */
+.layout__nav--mobile {
   display: none;
 }
 
@@ -202,10 +202,10 @@
     gap: 0.5rem;
   }
 
-  /* Adjust main for bottom nav clearance */
+  /* Adjust main padding */
   .layout__main {
     padding-top: 1.25rem;
-    padding-bottom: 120px;
+    padding-bottom: 3rem;
   }
 
   /* Username hidden on very small screens to save space */
@@ -213,26 +213,16 @@
     max-width: 80px;
   }
 
-  /* Show bottom nav */
-  .layout__bottom-nav {
+  /* Show top mobile nav */
+  .layout__nav--mobile {
     display: flex;
-    position: fixed;
-    bottom: max(1rem, env(safe-area-inset-bottom));
-    left: 1.5rem;
-    right: 1.5rem;
-    background: rgba(20, 20, 20, 0.85);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 999px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 0, 0, 0.2);
-    z-index: 100;
-    padding: 0.35rem 0.5rem;
     justify-content: space-around;
     align-items: center;
+    padding-bottom: 0.75rem;
+    margin-top: -0.25rem;
   }
 
-  .layout__bottom-nav-item {
+  .layout__nav-mobile-item {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -243,24 +233,25 @@
     text-decoration: none;
     font-size: 0.65rem;
     font-weight: 500;
-    border-radius: 999px;
-    transition: color 200ms ease, background 200ms ease, transform 150ms ease;
+    border-radius: var(--radius);
+    transition: color 200ms ease, background 200ms ease;
     min-height: 44px;
     min-width: 60px;
     -webkit-tap-highlight-color: transparent;
   }
 
-  .layout__bottom-nav-item svg {
+  .layout__nav-mobile-item svg {
     width: 20px;
     height: 20px;
     flex-shrink: 0;
   }
 
-  .layout__bottom-nav-item--active {
+  .layout__nav-mobile-item--active {
     color: var(--color-gold);
+    background: rgba(212, 175, 55, 0.1);
   }
 
-  .layout__bottom-nav-item:active {
+  .layout__nav-mobile-item:active {
     opacity: 0.7;
   }
 }
@@ -271,8 +262,9 @@
     display: none;
   }
 
-  .layout__bottom-nav-item {
+  .layout__nav-mobile-item {
     padding: 0.4rem 0.5rem;
     font-size: 0.6rem;
+    min-width: 50px;
   }
 }

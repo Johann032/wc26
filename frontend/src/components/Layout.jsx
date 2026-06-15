@@ -103,50 +103,49 @@ export default function Layout({ children }) {
             </button>
           </div>
         </div>
+
+        {/* ── Mobile Top Nav (mobile only) ── */}
+        <nav className="layout__nav--mobile container">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              className={({ isActive }) =>
+                isActive
+                  ? "layout__nav-mobile-item layout__nav-mobile-item--active"
+                  : "layout__nav-mobile-item"
+              }
+            >
+              <item.icon size={18} />
+              <span>{item.label}</span>
+            </NavLink>
+          ))}
+          {user?.is_admin && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) =>
+                isActive
+                  ? "layout__nav-mobile-item layout__nav-mobile-item--active"
+                  : "layout__nav-mobile-item"
+              }
+            >
+              <Shield size={18} />
+              <span>Admin</span>
+            </NavLink>
+          )}
+        </nav>
       </header>
 
       {/* ── Main ── */}
       <main className="layout__main container">{children}</main>
 
-      {/* ── Footer (desktop only) ── */}
       <footer className="layout__footer">
         <span className="layout__footer-brand">Guppy World Cup 2026</span>
         <span className="layout__footer-tagline">
           Predict. Compete. Win.
         </span>
       </footer>
-
-      {/* ── Bottom Nav (mobile only) ── */}
-      <nav className="layout__bottom-nav">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            end={item.end}
-            className={({ isActive }) =>
-              isActive
-                ? "layout__bottom-nav-item layout__bottom-nav-item--active"
-                : "layout__bottom-nav-item"
-            }
-          >
-            <item.icon size={20} />
-            <span>{item.label}</span>
-          </NavLink>
-        ))}
-        {user?.is_admin && (
-          <NavLink
-            to="/admin"
-            className={({ isActive }) =>
-              isActive
-                ? "layout__bottom-nav-item layout__bottom-nav-item--active"
-                : "layout__bottom-nav-item"
-            }
-          >
-            <Shield size={20} />
-            <span>Admin</span>
-          </NavLink>
-        )}
-      </nav>
     </div>
   );
 }
