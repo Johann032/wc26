@@ -67,7 +67,7 @@ class LeaderboardRepository:
         for prediction, question in predictions:
             total_points += prediction.awarded_points or 0
 
-            if prediction.awarded_points == 5:
+            if prediction.awarded_points is not None and prediction.awarded_points > 0:
                 correct_predictions += 1
 
                 if question.question_type == "exact_score":
