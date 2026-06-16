@@ -5,6 +5,13 @@ import { useFetch } from "../hooks/useFetch";
 import PredictionForm from "../components/PredictionForm";
 import { ChevronLeft, Clock, Target } from "lucide-react";
 
+function getStageScoringText(stage) {
+  if (["SF", "THIRD_PLACE", "FINAL"].includes(stage)) {
+    return "+3 Correct • -2 Wrong";
+  }
+  return "+3 Correct • 0 Wrong";
+}
+
 function Countdown({ kickoffTime }) {
   const [timeLeft, setTimeLeft] = useState("");
 
@@ -131,6 +138,15 @@ export default function MatchDetailsPage() {
           </span>
         </div>
 
+        <div className="match-card__info" style={{ flexDirection: "column", alignItems: "center", marginTop: "1rem", background: "rgba(255,255,255,0.03)", padding: "0.75rem", borderRadius: "var(--radius)" }}>
+          <strong style={{ color: "var(--color-gold)", fontSize: "0.9rem", textTransform: "capitalize" }}>
+            {match.stage === "THIRD_PLACE" ? "Third Place" : (match.stage || "GROUP").replace("_", " ")} Stage Scoring
+          </strong>
+          <span className="text-muted" style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>
+            {getStageScoringText(match.stage || "GROUP")}
+          </span>
+        </div>
+
         {showCountdown && <Countdown kickoffTime={match.kickoff_time} />}
       </div>
 
@@ -155,14 +171,14 @@ export default function MatchDetailsPage() {
             className={`card animate-in animate-in-delay-${Math.min(i + 1, 4)}`}
           >
             <h3>{question.question_text}</h3>
-            <p className="card__meta">
-              {question.question_type} · {question.point_value} pts
+            <div className="card__meta" style={{ marginTop: "0.5rem" }}>
+              {question.question_type}
               {isLocked && (
                 <span className="badge badge--warning" style={{ marginLeft: "0.5rem" }}>
                   Locked
                 </span>
               )}
-            </p>
+            </div>
             <PredictionForm
               question={question}
               existingAnswer={predictionMap[question.id]}

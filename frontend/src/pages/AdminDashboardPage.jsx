@@ -768,7 +768,7 @@ export default function AdminDashboardPage() {
                 <div key={q.id} className="card admin-list-item">
                   <div>
                     <strong>{q.question_text}</strong>{" "}
-                    <span className="text-muted">({q.question_type}, {q.point_value}pts)</span>
+                    <span className="text-muted">({q.question_type})</span>
                     {q.locked && <span className="badge badge--warning" style={{ marginLeft: "0.5rem" }}>Locked</span>}
                   </div>
                   {!q.locked && (
