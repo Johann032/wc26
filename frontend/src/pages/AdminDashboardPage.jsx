@@ -22,7 +22,7 @@ function parseKickoff(value) {
   return Number.isNaN(date.getTime()) ? null : date.toISOString();
 }
 
-function MatchEditor({ match, onSave, onDelete }) {
+function MatchEditor({ match, onSave, onDelete, onViewParticipation }) {
   const [form, setForm] = useState({
     team1: match.team1,
     team2: match.team2,
@@ -104,6 +104,9 @@ function MatchEditor({ match, onSave, onDelete }) {
         <button type="button" className="btn btn--danger" onClick={() => onDelete(match.id)}>
           <Trash2 size={16} /> Delete
         </button>
+        <button type="button" className="btn btn--secondary" onClick={() => onViewParticipation(match)}>
+          <Users size={16} /> Participation
+        </button>
       </div>
     </div>
   );
@@ -148,6 +151,10 @@ export default function AdminDashboardPage() {
 
   const [selectedTournament, setSelectedTournament] = useState(null);
   const [selectedMatch, setSelectedMatch] = useState(null);
+
+  const [participationMatch, setParticipationMatch] = useState(null);
+  const [participationData, setParticipationData] = useState(null);
+  const [loadingParticipation, setLoadingParticipation] = useState(false);
 
   const [tournamentForm, setTournamentForm] = useState(emptyTournamentForm());
   const [userForm, setUserForm] = useState(emptyUserForm());
@@ -332,6 +339,26 @@ export default function AdminDashboardPage() {
     } catch (err) {
       notify(err.message, "error");
     }
+  };
+
+  const handleViewParticipation = async (match) => {
+    setParticipationMatch(match);
+    setParticipationData(null);
+    setLoadingParticipation(true);
+    try {
+      const data = await api.getMatchParticipation(match.id);
+      setParticipationData(data);
+    } catch (err) {
+      notify(err.message, "error");
+      setParticipationMatch(null);
+    } finally {
+      setLoadingParticipation(false);
+    }
+  };
+
+  const closeParticipation = () => {
+    setParticipationMatch(null);
+    setParticipationData(null);
   };
 
   if (loading) return <div className="loading">Loading admin dashboard...</div>;
@@ -591,8 +618,57 @@ export default function AdminDashboardPage() {
                   match={m}
                   onSave={handleUpdateMatch}
                   onDelete={handleDeleteMatch}
+                  onViewParticipation={handleViewParticipation}
                 />
               ))}
+              {participationMatch && (
+                <div className="card" style={{ marginTop: "1rem", border: "2px solid var(--color-gold)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <h3 style={{ margin: 0 }}>Participation: {participationMatch.team1} vs {participationMatch.team2}</h3>
+                    <button type="button" className="btn btn--small btn--secondary" onClick={closeParticipation}>Close</button>
+                  </div>
+                  {loadingParticipation ? (
+                    <p style={{ marginTop: "1rem" }}>Loading participation data...</p>
+                  ) : participationData ? (
+                    <div style={{ marginTop: "1rem" }}>
+                      <div className="stats-grid" style={{ marginBottom: "1rem" }}>
+                        <div className="stat-card">
+                          <div className="stat-label">Active Users</div>
+                          <div className="stat-value">{participationData.total_active_users}</div>
+                        </div>
+                        <div className="stat-card">
+                          <div className="stat-label">Submitted</div>
+                          <div className="stat-value">{participationData.submitted_count}</div>
+                        </div>
+                        <div className="stat-card">
+                          <div className="stat-label">Pending</div>
+                          <div className="stat-value">{participationData.pending_count}</div>
+                        </div>
+                      </div>
+                      <div className="form-row" style={{ alignItems: "flex-start" }}>
+                        <div style={{ flex: 1 }}>
+                          <h4>Submitted Users</h4>
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.5rem" }}>
+                            {participationData.submitted_users.length === 0 && <span className="text-muted">None</span>}
+                            {participationData.submitted_users.map(u => (
+                              <span key={u.id} className="badge badge--active">{u.display_name}</span>
+                            ))}
+                          </div>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <h4>Pending Users</h4>
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.5rem" }}>
+                            {participationData.pending_users.length === 0 && <span className="text-muted">None</span>}
+                            {participationData.pending_users.map(u => (
+                              <span key={u.id} className="badge" style={{ background: "rgba(255,255,255,0.1)" }}>{u.display_name}</span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              )}
             </>
           )}
         </div>

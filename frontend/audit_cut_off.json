@@ -1,0 +1,177 @@
+{
+  "html": {
+    "scrollHeight": 2401,
+    "clientHeight": 667,
+    "scrollTopMax": 1734
+  },
+  "body": {
+    "scrollHeight": 2401,
+    "clientHeight": 2401
+  },
+  "questionsContainer": {
+    "scrollHeight": 2352,
+    "clientHeight": 2352,
+    "height": 2352.421875,
+    "bottom": 2401.421875
+  },
+  "questions": [
+    {
+      "index": 1,
+      "top": 709.190673828125,
+      "bottom": 859.190673828125,
+      "height": 150
+    },
+    {
+      "index": 2,
+      "top": 879.190673828125,
+      "bottom": 1029.190673828125,
+      "height": 150
+    },
+    {
+      "index": 3,
+      "top": 1049.190673828125,
+      "bottom": 1199.190673828125,
+      "height": 150
+    },
+    {
+      "index": 4,
+      "top": 1219.190673828125,
+      "bottom": 1369.190673828125,
+      "height": 150
+    },
+    {
+      "index": 5,
+      "top": 1389.190673828125,
+      "bottom": 1539.190673828125,
+      "height": 150
+    },
+    {
+      "index": 6,
+      "top": 1559.190673828125,
+      "bottom": 1709.190673828125,
+      "height": 150
+    },
+    {
+      "index": 7,
+      "top": 1729.190673828125,
+      "bottom": 1879.190673828125,
+      "height": 150
+    },
+    {
+      "index": 8,
+      "top": 1899.190673828125,
+      "bottom": 2049.190673828125,
+      "height": 150
+    },
+    {
+      "index": 9,
+      "top": 2069.190673828125,
+      "bottom": 2219.190673828125,
+      "height": 150
+    },
+    {
+      "index": 10,
+      "top": 2239.190673828125,
+      "bottom": 2389.190673828125,
+      "height": 150
+    }
+  ],
+  "parents": [
+    {
+      "tag": "DIV",
+      "className": "content-relative",
+      "scrollHeight": 2352,
+      "clientHeight": 2352,
+      "offsetHeight": 2352,
+      "height": "2352.42px",
+      "minHeight": "auto",
+      "maxHeight": "none",
+      "overflow": "visible",
+      "overflowY": "visible",
+      "flex": "0 1 auto",
+      "flexDirection": "row",
+      "position": "relative",
+      "bottomAbs": 2401.421875
+    },
+    {
+      "tag": "DIV",
+      "className": "bg-page-wrapper",
+      "scrollHeight": 2352,
+      "clientHeight": 2352,
+      "offsetHeight": 2352,
+      "height": "2352.42px",
+      "minHeight": "667px",
+      "maxHeight": "none",
+      "overflow": "visible",
+      "overflowY": "visible",
+      "flex": "0 1 auto",
+      "flexDirection": "column",
+      "position": "relative",
+      "bottomAbs": 2401.421875
+    },
+    {
+      "tag": "MAIN",
+      "className": "layout__main container",
+      "scrollHeight": 2352,
+      "clientHeight": 2352,
+      "offsetHeight": 2352,
+      "height": "2352.42px",
+      "minHeight": "607px",
+      "maxHeight": "none",
+      "overflow": "visible",
+      "overflowY": "visible",
+      "flex": "0 1 auto",
+      "flexDirection": "row",
+      "position": "static",
+      "bottomAbs": 2401.421875
+    },
+    {
+      "tag": "DIV",
+      "className": "layout",
+      "scrollHeight": 2401,
+      "clientHeight": 2401,
+      "offsetHeight": 2401,
+      "height": "2401.42px",
+      "minHeight": "0px",
+      "maxHeight": "none",
+      "overflow": "visible",
+      "overflowY": "visible",
+      "flex": "0 1 auto",
+      "flexDirection": "row",
+      "position": "static",
+      "bottomAbs": 2401.421875
+    },
+    {
+      "tag": "DIV",
+      "className": "",
+      "scrollHeight": 2401,
+      "clientHeight": 2401,
+      "offsetHeight": 2401,
+      "height": "2401.42px",
+      "minHeight": "0px",
+      "maxHeight": "none",
+      "overflow": "visible",
+      "overflowY": "visible",
+      "flex": "0 1 auto",
+      "flexDirection": "row",
+      "position": "static",
+      "bottomAbs": 2401.421875
+    },
+    {
+      "tag": "BODY",
+      "className": "",
+      "scrollHeight": 2401,
+      "clientHeight": 2401,
+      "offsetHeight": 2401,
+      "height": "2401.42px",
+      "minHeight": "667px",
+      "maxHeight": "none",
+      "overflow": "visible",
+      "overflowY": "visible",
+      "flex": "0 1 auto",
+      "flexDirection": "row",
+      "position": "static",
+      "bottomAbs": 2401.421875
+    }
+  ]
+}

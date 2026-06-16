@@ -1,0 +1,216 @@
+{
+  "html": {
+    "found": true,
+    "tagName": "HTML",
+    "className": "",
+    "scrollHeight": 984,
+    "clientHeight": 667,
+    "overflow": "visible",
+    "overflowY": "visible",
+    "height": "984.141px",
+    "minHeight": "0px",
+    "maxHeight": "none",
+    "position": "static",
+    "touchAction": "auto",
+    "overscrollBehavior": "auto"
+  },
+  "body": {
+    "found": true,
+    "tagName": "BODY",
+    "className": "",
+    "scrollHeight": 984,
+    "clientHeight": 984,
+    "overflow": "visible",
+    "overflowY": "visible",
+    "height": "984.141px",
+    "minHeight": "667px",
+    "maxHeight": "none",
+    "position": "static",
+    "touchAction": "auto",
+    "overscrollBehavior": "auto"
+  },
+  "root": {
+    "found": true,
+    "tagName": "DIV",
+    "className": "",
+    "scrollHeight": 984,
+    "clientHeight": 984,
+    "overflow": "visible",
+    "overflowY": "visible",
+    "height": "984.141px",
+    "minHeight": "0px",
+    "maxHeight": "none",
+    "position": "static",
+    "touchAction": "auto",
+    "overscrollBehavior": "auto"
+  },
+  "layout": {
+    "found": true,
+    "tagName": "DIV",
+    "className": "layout",
+    "scrollHeight": 984,
+    "clientHeight": 984,
+    "overflow": "visible",
+    "overflowY": "visible",
+    "height": "984.141px",
+    "minHeight": "0px",
+    "maxHeight": "none",
+    "position": "static",
+    "touchAction": "auto",
+    "overscrollBehavior": "auto"
+  },
+  "layoutMain": {
+    "found": true,
+    "tagName": "MAIN",
+    "className": "layout__main container",
+    "scrollHeight": 935,
+    "clientHeight": 935,
+    "overflow": "visible",
+    "overflowY": "visible",
+    "height": "935.141px",
+    "minHeight": "607px",
+    "maxHeight": "none",
+    "position": "static",
+    "touchAction": "auto",
+    "overscrollBehavior": "auto"
+  },
+  "bgPageWrapper": {
+    "found": true,
+    "tagName": "DIV",
+    "className": "bg-page-wrapper",
+    "scrollHeight": 935,
+    "clientHeight": 935,
+    "overflow": "visible",
+    "overflowY": "visible",
+    "height": "935.141px",
+    "minHeight": "667px",
+    "maxHeight": "none",
+    "position": "relative",
+    "touchAction": "auto",
+    "overscrollBehavior": "auto"
+  },
+  "hiddenElements": [
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "SPAN",
+      "class": "layout__username",
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "overflow": "hidden"
+    }
+  ],
+  "fixedElements": [
+    {
+      "tag": "DIV",
+      "class": "bg-image bg-trophy",
+      "pointerEvents": "none"
+    },
+    {
+      "tag": "DIV",
+      "class": "bg-overlay",
+      "pointerEvents": "none"
+    },
+    {
+      "tag": "NAV",
+      "class": "layout__bottom-nav",
+      "pointerEvents": "auto"
+    }
+  ]
+}

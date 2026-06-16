@@ -37,3 +37,11 @@ def recalculate_scores():
     return jsonify(result)
 
   return jsonify(scoring_service.recalculate_all())
+
+@admin_bp.get("/matches/<int:match_id>/participation")
+@admin_required
+def get_match_participation(match_id):
+  participation = admin_service.get_match_participation(match_id)
+  if not participation:
+    return jsonify({"error": "Failed to calculate participation"}), 500
+  return jsonify(participation)
