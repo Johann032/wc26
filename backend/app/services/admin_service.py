@@ -1,12 +1,14 @@
 from app.repositories.match_repository import MatchRepository
 from app.repositories.prediction_repository import PredictionRepository
-from app.repositories.question_repository import QuestionRepository
 from app.repositories.tournament_repository import TournamentRepository
 from app.repositories.user_repository import UserRepository
+from app.repositories.question_repository import QuestionRepository
 from app.extensions import db
 from app.models.user import User
 from app.models.prediction import Prediction
 from app.models.prediction_question import PredictionQuestion
+from app.models.match import Match
+from sqlalchemy import func
 
 
 class AdminService:
@@ -59,3 +61,40 @@ class AdminService:
         "submitted_users": [{"id": u.id, "display_name": u.display_name} for u in submitted_users],
         "pending_users": [{"id": u.id, "display_name": u.display_name} for u in pending_users],
     }
+
+  def get_tournament_participation_summary(self, tournament_id):
+    matches = Match.query.filter_by(tournament_id=tournament_id).all()
+    if not matches:
+        return []
+
+    total_active_users = User.query.filter_by(active=True).count()
+
+    submitted_counts = db.session.query(
+        PredictionQuestion.match_id,
+        func.count(func.distinct(Prediction.user_id)).label('submitted_count')
+    ).join(
+        Prediction, Prediction.question_id == PredictionQuestion.id
+    ).join(
+        User, User.id == Prediction.user_id
+    ).filter(
+        PredictionQuestion.match_id.in_([m.id for m in matches]),
+        User.active == True
+    ).group_by(PredictionQuestion.match_id).all()
+
+    counts_map = {row.match_id: row.submitted_count for row in submitted_counts}
+
+    results = []
+    for m in matches:
+        sub_count = counts_map.get(m.id, 0)
+        pending_count = total_active_users - sub_count
+        pct = round((sub_count / total_active_users * 100) if total_active_users > 0 else 0)
+        results.append({
+            "match_id": m.id,
+            "match_name": f"{m.team1} vs {m.team2}",
+            "total_active_users": total_active_users,
+            "submitted_count": sub_count,
+            "pending_count": pending_count,
+            "submission_percentage": pct
+        })
+
+    return results

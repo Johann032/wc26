@@ -22,7 +22,7 @@ function parseKickoff(value) {
   return Number.isNaN(date.getTime()) ? null : date.toISOString();
 }
 
-function MatchEditor({ match, onSave, onDelete, onViewParticipation }) {
+function MatchEditor({ match, onSave, onDelete }) {
   const [form, setForm] = useState({
     team1: match.team1,
     team2: match.team2,
@@ -104,10 +104,93 @@ function MatchEditor({ match, onSave, onDelete, onViewParticipation }) {
         <button type="button" className="btn btn--danger" onClick={() => onDelete(match.id)}>
           <Trash2 size={16} /> Delete
         </button>
-        <button type="button" className="btn btn--secondary" onClick={() => onViewParticipation(match)}>
-          <Users size={16} /> Participation
-        </button>
       </div>
+    </div>
+  );
+}
+
+function ParticipationRow({ match, summary }) {
+  const [expanded, setExpanded] = useState(false);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleToggle = async () => {
+    if (!expanded && !data) {
+      setLoading(true);
+      try {
+        const result = await api.getMatchParticipation(match.id);
+        setData(result);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    setExpanded(!expanded);
+  };
+
+  return (
+    <div className="card admin-list-item" style={{ flexDirection: "column", alignItems: "stretch", gap: "0.5rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <strong>{match.team1} vs {match.team2}</strong>
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          {summary ? (
+            <span className="text-muted">
+              {summary.submitted_count}/{summary.total_active_users} ({summary.submission_percentage}%)
+            </span>
+          ) : (
+            <span className="text-muted">...</span>
+          )}
+          <button type="button" className="btn btn--small btn--secondary" onClick={handleToggle}>
+            {expanded ? "Collapse" : "Expand"}
+          </button>
+        </div>
+      </div>
+      {expanded && (
+        <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--border-color)" }}>
+          {loading && <p>Loading participation data...</p>}
+          {error && <p className="error">{error}</p>}
+          {data && (
+            <div>
+              <div className="stats-grid" style={{ marginBottom: "1rem" }}>
+                <div className="stat-card">
+                  <div className="stat-label">Active Users</div>
+                  <div className="stat-value">{data.total_active_users}</div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-label">Submitted</div>
+                  <div className="stat-value">{data.submitted_count}</div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-label">Pending</div>
+                  <div className="stat-value">{data.pending_count}</div>
+                </div>
+              </div>
+              <div className="form-row" style={{ alignItems: "flex-start" }}>
+                <div style={{ flex: 1 }}>
+                  <h4>Submitted Users</h4>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.5rem" }}>
+                    {data.submitted_users.length === 0 && <span className="text-muted">None</span>}
+                    {data.submitted_users.map(u => (
+                      <span key={u.id} className="badge badge--active">{u.display_name}</span>
+                    ))}
+                  </div>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <h4>Pending Users</h4>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.5rem" }}>
+                    {data.pending_users.length === 0 && <span className="text-muted">None</span>}
+                    {data.pending_users.map(u => (
+                      <span key={u.id} className="badge" style={{ background: "rgba(255,255,255,0.1)" }}>{u.display_name}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -152,10 +235,6 @@ export default function AdminDashboardPage() {
   const [selectedTournament, setSelectedTournament] = useState(null);
   const [selectedMatch, setSelectedMatch] = useState(null);
 
-  const [participationMatch, setParticipationMatch] = useState(null);
-  const [participationData, setParticipationData] = useState(null);
-  const [loadingParticipation, setLoadingParticipation] = useState(false);
-
   const [tournamentForm, setTournamentForm] = useState(emptyTournamentForm());
   const [userForm, setUserForm] = useState(emptyUserForm());
   const [matchForm, setMatchForm] = useState(emptyMatchForm());
@@ -171,6 +250,25 @@ export default function AdminDashboardPage() {
     () => (selectedMatch ? api.getQuestionsForMatch(selectedMatch, true) : Promise.resolve([])),
     [selectedMatch],
   );
+
+  const [participationSummary, setParticipationSummary] = useState([]);
+  const [loadingParticipationSummary, setLoadingParticipationSummary] = useState(false);
+
+  useEffect(() => {
+    if (activeSection === "participation" && selectedTournament) {
+      setLoadingParticipationSummary(true);
+      api.getTournamentParticipationSummary(selectedTournament).then(data => {
+        setParticipationSummary(data || []);
+      }).catch(err => {
+        notify(err.message, "error");
+        setParticipationSummary([]);
+      }).finally(() => {
+        setLoadingParticipationSummary(false);
+      });
+    } else {
+      setParticipationSummary([]);
+    }
+  }, [activeSection, selectedTournament]);
 
   const activeTournaments = overview?.tournaments?.filter((t) => t.status !== "archived") || [];
 
@@ -341,26 +439,6 @@ export default function AdminDashboardPage() {
     }
   };
 
-  const handleViewParticipation = async (match) => {
-    setParticipationMatch(match);
-    setParticipationData(null);
-    setLoadingParticipation(true);
-    try {
-      const data = await api.getMatchParticipation(match.id);
-      setParticipationData(data);
-    } catch (err) {
-      notify(err.message, "error");
-      setParticipationMatch(null);
-    } finally {
-      setLoadingParticipation(false);
-    }
-  };
-
-  const closeParticipation = () => {
-    setParticipationMatch(null);
-    setParticipationData(null);
-  };
-
   if (loading) return <div className="loading">Loading admin dashboard...</div>;
   if (error) return <div className="error">{error}</div>;
 
@@ -371,6 +449,7 @@ export default function AdminDashboardPage() {
     { id: "matches", label: "Matches", icon: Swords },
     { id: "questions", label: "Questions", icon: HelpCircle },
     { id: "results", label: "Results", icon: CheckSquare },
+    { id: "participation", label: "Participation", icon: Users },
   ];
 
   return (
@@ -618,57 +697,32 @@ export default function AdminDashboardPage() {
                   match={m}
                   onSave={handleUpdateMatch}
                   onDelete={handleDeleteMatch}
-                  onViewParticipation={handleViewParticipation}
                 />
               ))}
-              {participationMatch && (
-                <div className="card" style={{ marginTop: "1rem", border: "2px solid var(--color-gold)" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <h3 style={{ margin: 0 }}>Participation: {participationMatch.team1} vs {participationMatch.team2}</h3>
-                    <button type="button" className="btn btn--small btn--secondary" onClick={closeParticipation}>Close</button>
-                  </div>
-                  {loadingParticipation ? (
-                    <p style={{ marginTop: "1rem" }}>Loading participation data...</p>
-                  ) : participationData ? (
-                    <div style={{ marginTop: "1rem" }}>
-                      <div className="stats-grid" style={{ marginBottom: "1rem" }}>
-                        <div className="stat-card">
-                          <div className="stat-label">Active Users</div>
-                          <div className="stat-value">{participationData.total_active_users}</div>
-                        </div>
-                        <div className="stat-card">
-                          <div className="stat-label">Submitted</div>
-                          <div className="stat-value">{participationData.submitted_count}</div>
-                        </div>
-                        <div className="stat-card">
-                          <div className="stat-label">Pending</div>
-                          <div className="stat-value">{participationData.pending_count}</div>
-                        </div>
-                      </div>
-                      <div className="form-row" style={{ alignItems: "flex-start" }}>
-                        <div style={{ flex: 1 }}>
-                          <h4>Submitted Users</h4>
-                          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.5rem" }}>
-                            {participationData.submitted_users.length === 0 && <span className="text-muted">None</span>}
-                            {participationData.submitted_users.map(u => (
-                              <span key={u.id} className="badge badge--active">{u.display_name}</span>
-                            ))}
-                          </div>
-                        </div>
-                        <div style={{ flex: 1 }}>
-                          <h4>Pending Users</h4>
-                          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.5rem" }}>
-                            {participationData.pending_users.length === 0 && <span className="text-muted">None</span>}
-                            {participationData.pending_users.map(u => (
-                              <span key={u.id} className="badge" style={{ background: "rgba(255,255,255,0.1)" }}>{u.display_name}</span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ) : null}
-                </div>
-              )}
+            </>
+          )}
+        </div>
+      )}
+
+      {/* PARTICIPATION */}
+      {activeSection === "participation" && (
+        <div className="animate-in">
+          <label className="form-label">Tournament
+            <select className="input" value={selectedTournament || ""} onChange={(e) => handleTournamentChange(Number(e.target.value) || null)}>
+              <option value="">Select...</option>
+              {activeTournaments.map((t) => (
+                <option key={t.id} value={t.id}>{t.name}</option>
+              ))}
+            </select>
+          </label>
+          {selectedTournament && (
+            <>
+              {(loadingMatches || loadingParticipationSummary) && <p className="loading-inline">Loading matches...</p>}
+              {!loadingMatches && matches?.length === 0 && <p className="empty-state">No matches yet.</p>}
+              {!loadingMatches && !loadingParticipationSummary && matches?.map((m) => {
+                const summary = participationSummary.find(s => s.match_id === m.id);
+                return <ParticipationRow key={m.id} match={m} summary={summary} />;
+              })}
             </>
           )}
         </div>

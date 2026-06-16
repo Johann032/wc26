@@ -94,6 +94,7 @@ export const api = {
 
   getAdminOverview: () => request("/admin/overview"),
   getTournamentSummary: (id) => request(`/admin/tournaments/${id}/summary`),
+  getTournamentParticipationSummary: (id) => request(`/admin/tournaments/${id}/participation-summary`),
   getMatchParticipation: (id) => request(`/admin/matches/${id}/participation`),
   recalculateScores: (tournamentId) =>
     request("/admin/recalculate", {

@@ -45,3 +45,9 @@ def get_match_participation(match_id):
   if not participation:
     return jsonify({"error": "Failed to calculate participation"}), 500
   return jsonify(participation)
+
+@admin_bp.get("/tournaments/<int:tournament_id>/participation-summary")
+@admin_required
+def get_tournament_participation_summary(tournament_id):
+  summary = admin_service.get_tournament_participation_summary(tournament_id)
+  return jsonify(summary)
