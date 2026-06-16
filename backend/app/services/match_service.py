@@ -42,7 +42,7 @@ class MatchService:
       return None, "Valid kickoff time is required"
 
     status = data.get("status", "scheduled")
-    if status not in ("scheduled", "live", "finished"):
+    if status not in ("scheduled", "locked", "live", "finished"):
       return None, "Invalid status"
 
     score1, score1_err = self._parse_score(data.get("score1"))
@@ -92,7 +92,7 @@ class MatchService:
         return None, "Valid kickoff time is required"
       updates["kickoff_time"] = kickoff
     if "status" in data:
-      if data["status"] not in ("scheduled", "live", "finished"):
+      if data["status"] not in ("scheduled", "locked", "live", "finished"):
         return None, "Invalid status"
       updates["status"] = data["status"]
     if "score1" in data:

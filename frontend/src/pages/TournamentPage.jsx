@@ -116,7 +116,7 @@ export default function TournamentPage() {
                     <Clock size={14} />
                     {new Date(match.kickoff_time).toLocaleString()}
                   </span>
-                  <span className={`badge ${match.status === "live" ? "badge--active" : ""}`}>{match.status}</span>
+                  <span className={`badge ${match.status === "live" ? "badge--active" : match.status === "locked" ? "badge--warning" : ""}`}>{match.status}</span>
                 </div>
               </Link>
             ))}
@@ -164,7 +164,7 @@ export default function TournamentPage() {
                           <Clock size={14} />
                           {new Date(match.kickoff_time).toLocaleString()}
                         </span>
-                        <span className="badge">{match.status}</span>
+                        <span className={`badge ${match.status === "live" ? "badge--active" : match.status === "locked" ? "badge--warning" : ""}`}>{match.status}</span>
                       </div>
                     </Link>
                   ))}

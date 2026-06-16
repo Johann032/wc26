@@ -28,6 +28,25 @@ class Match(TimestampMixin, db.Model):
     cascade="all, delete-orphan",
   )
 
+  @property
+  def computed_status(self):
+    from app.utils.time import ensure_utc, server_now
+    from datetime import timedelta
+    
+    now = server_now()
+    kickoff = ensure_utc(self.kickoff_time)
+    
+    if now < kickoff - timedelta(minutes=5):
+        return "scheduled"
+        
+    if now < kickoff:
+        return "locked"
+        
+    if now < kickoff + timedelta(minutes=120):
+        return "live"
+        
+    return "finished"
+
   def to_dict(self):
     return {
       "id": self.id,
@@ -35,7 +54,7 @@ class Match(TimestampMixin, db.Model):
       "team1": self.team1,
       "team2": self.team2,
       "kickoff_time": self.kickoff_time.isoformat() + ("Z" if self.kickoff_time.tzinfo is None else ""),
-      "status": self.status,
+      "status": self.computed_status,
       "stage": self.stage,
       "score1": self.score1,
       "score2": self.score2,

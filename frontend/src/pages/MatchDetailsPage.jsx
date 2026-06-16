@@ -131,6 +131,8 @@ export default function MatchDetailsPage() {
                 ? "badge--live"
                 : match.status === "finished"
                 ? "badge--gold"
+                : match.status === "locked"
+                ? "badge--warning"
                 : ""
             }`}
           >
