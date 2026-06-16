@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api } from "../api/client";
 import { useFetch } from "../hooks/useFetch";
@@ -15,6 +16,11 @@ export default function TournamentPage() {
     () => api.getMatchesForTournament(tournamentId),
     [tournamentId],
   );
+
+  const [showFinished, setShowFinished] = useState(false);
+
+  const upcomingMatches = matches?.filter(m => m.status !== "finished") || [];
+  const finishedMatches = matches?.filter(m => m.status === "finished") || [];
 
   if (loadingTournament || loadingMatches) {
     return (
@@ -78,39 +84,95 @@ export default function TournamentPage() {
           No matches scheduled.
         </div>
       ) : (
-        <div className="matches-list">
-          {matches?.map((match, index) => (
-            <Link
-              key={match.id}
-              to={`/matches/${match.id}`}
-              className={`card card--link match-card animate-in animate-in-delay-${Math.min(index + 3, 8)}`}
-            >
-              <div className="match-card__teams">
-                <span className="match-card__team match-card__team--left">
-                  {match.team1}
-                </span>
-                <span className="match-card__vs">VS</span>
-                <span className="match-card__team match-card__team--right">
-                  {match.team2}
-                </span>
-              </div>
+        <>
+          <div className="matches-list">
+            {upcomingMatches.length === 0 && (
+              <p className="text-muted" style={{ padding: "1rem 0" }}>No upcoming matches.</p>
+            )}
+            {upcomingMatches.map((match, index) => (
+              <Link
+                key={match.id}
+                to={`/matches/${match.id}`}
+                className={`card card--link match-card animate-in animate-in-delay-${Math.min(index + 3, 8)}`}
+              >
+                <div className="match-card__teams">
+                  <span className="match-card__team match-card__team--left">
+                    {match.team1}
+                  </span>
+                  <span className="match-card__vs">VS</span>
+                  <span className="match-card__team match-card__team--right">
+                    {match.team2}
+                  </span>
+                </div>
 
-              {match.score1 != null && (
-                <div className="match-card__score">
-                  {match.score1} - {match.score2}
+                {match.score1 != null && (
+                  <div className="match-card__score">
+                    {match.score1} - {match.score2}
+                  </div>
+                )}
+
+                <div className="match-card__info">
+                  <span className="match-card__kickoff">
+                    <Clock size={14} />
+                    {new Date(match.kickoff_time).toLocaleString()}
+                  </span>
+                  <span className={`badge ${match.status === "live" ? "badge--active" : ""}`}>{match.status}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          {finishedMatches.length > 0 && (
+            <div style={{ marginTop: "2rem" }} className="animate-in animate-in-delay-4">
+              <button
+                type="button"
+                className="btn btn--secondary"
+                style={{ width: "100%", justifyContent: "space-between", marginBottom: showFinished ? "1rem" : 0 }}
+                onClick={() => setShowFinished(!showFinished)}
+              >
+                <span>Finished Matches ({finishedMatches.length})</span>
+                {showFinished ? <ChevronLeft size={16} style={{ transform: "rotate(90deg)" }} /> : <ChevronRight size={16} />}
+              </button>
+
+              {showFinished && (
+                <div className="matches-list animate-in">
+                  {finishedMatches.map((match) => (
+                    <Link
+                      key={match.id}
+                      to={`/matches/${match.id}`}
+                      className="card card--link match-card"
+                      style={{ opacity: 0.8 }}
+                    >
+                      <div className="match-card__teams">
+                        <span className="match-card__team match-card__team--left">
+                          {match.team1}
+                        </span>
+                        <span className="match-card__vs">VS</span>
+                        <span className="match-card__team match-card__team--right">
+                          {match.team2}
+                        </span>
+                      </div>
+
+                      {match.score1 != null && (
+                        <div className="match-card__score">
+                          {match.score1} - {match.score2}
+                        </div>
+                      )}
+
+                      <div className="match-card__info">
+                        <span className="match-card__kickoff">
+                          <Clock size={14} />
+                          {new Date(match.kickoff_time).toLocaleString()}
+                        </span>
+                        <span className="badge">{match.status}</span>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
               )}
-
-              <div className="match-card__info">
-                <span className="match-card__kickoff">
-                  <Clock size={14} />
-                  {new Date(match.kickoff_time).toLocaleString()}
-                </span>
-                <span className="badge">{match.status}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
+            </div>
+          )}
+        </>
       )}
 
       {/* Footer Link */}
