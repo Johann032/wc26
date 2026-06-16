@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { api } from "../api/client";
 import { Lock, CheckCircle, XCircle, Send } from "lucide-react";
 
@@ -32,7 +32,15 @@ export default function PredictionForm({ question, existingAnswer, onSaved, isLo
 
     if (type === "winner" || type === "multiple_choice") {
       return (
-        <select value={answer} onChange={(e) => setAnswer(e.target.value)} className="input">
+        <select 
+          value={answer} 
+          onChange={(e) => {
+            const val = e.target.value;
+            setAnswer(val);
+            if (val) savePrediction(val);
+          }} 
+          className="input"
+        >
           <option value="">Select...</option>
           {choices.map((c) => (
             <option key={c} value={c}>{c}</option>
@@ -47,14 +55,20 @@ export default function PredictionForm({ question, existingAnswer, onSaved, isLo
           <button
             type="button"
             className={`prediction-toggle__btn ${answer === "Yes" ? "prediction-toggle__btn--active" : ""}`}
-            onClick={() => setAnswer("Yes")}
+            onClick={() => {
+              setAnswer("Yes");
+              savePrediction("Yes");
+            }}
           >
             Yes
           </button>
           <button
             type="button"
             className={`prediction-toggle__btn ${answer === "No" ? "prediction-toggle__btn--active" : ""}`}
-            onClick={() => setAnswer("No")}
+            onClick={() => {
+              setAnswer("No");
+              savePrediction("No");
+            }}
           >
             No
           </button>
@@ -69,7 +83,17 @@ export default function PredictionForm({ question, existingAnswer, onSaved, isLo
           className="input"
           placeholder="e.g. 2-1"
           value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
+          onChange={(e) => {
+            setAnswer(e.target.value);
+            setError(null);
+            setSuccess(false);
+          }}
+          onBlur={() => {
+            if (answer && answer !== existingAnswer) savePrediction(answer);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && answer) savePrediction(answer);
+          }}
         />
       );
     }
@@ -82,7 +106,17 @@ export default function PredictionForm({ question, existingAnswer, onSaved, isLo
           step="1"
           className="input"
           value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
+          onChange={(e) => {
+            setAnswer(e.target.value);
+            setError(null);
+            setSuccess(false);
+          }}
+          onBlur={() => {
+            if (answer && answer !== existingAnswer) savePrediction(answer);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && answer) savePrediction(answer);
+          }}
         />
       );
     }
@@ -92,60 +126,94 @@ export default function PredictionForm({ question, existingAnswer, onSaved, isLo
         type="text"
         className="input"
         value={answer}
-        onChange={(e) => setAnswer(e.target.value)}
+        onChange={(e) => {
+          setAnswer(e.target.value);
+          setError(null);
+          setSuccess(false);
+        }}
+        onBlur={() => {
+          if (answer && answer !== existingAnswer) savePrediction(answer);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && answer) savePrediction(answer);
+        }}
       />
     );
   };
 
-  const validateClient = () => {
-    if (!answer) return "Answer is required";
-    if (question.question_type === "exact_score" && !/^\d+\s*[-:]\s*\d+$/.test(answer.trim())) {
+  const validateClient = (val) => {
+    if (!val) return "Answer is required";
+    if (question.question_type === "exact_score" && !/^\d+\s*[-:]\s*\d+$/.test(val.trim())) {
       return "Exact score must be in format e.g. 2-1";
     }
-    if (question.question_type === "number" && !/^\d+$/.test(answer.trim())) {
+    if (question.question_type === "number" && !/^\d+$/.test(val.trim())) {
       return "Answer must be a whole number";
     }
     return null;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const clientError = validateClient();
-    if (clientError) {
-      setError(clientError);
+  const savingRef = useRef(false);
+  const pendingAnswerRef = useRef(null);
+
+  const savePrediction = async (valToSave) => {
+    if (savingRef.current) {
+      pendingAnswerRef.current = valToSave;
       return;
     }
+    
+    savingRef.current = true;
     setSaving(true);
+
+    const clientError = validateClient(valToSave);
+    if (clientError) {
+      setError(clientError);
+      setSaving(false);
+      savingRef.current = false;
+      return;
+    }
+    
     setError(null);
     setSuccess(false);
     try {
-      await api.submitPrediction(question.id, answer);
+      await api.submitPrediction(question.id, valToSave);
       setSuccess(true);
       onSaved?.();
+      setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
       setError(err.message);
     } finally {
-      setSaving(false);
+      if (pendingAnswerRef.current !== null) {
+        const nextVal = pendingAnswerRef.current;
+        pendingAnswerRef.current = null;
+        savingRef.current = false;
+        savePrediction(nextVal);
+      } else {
+        savingRef.current = false;
+        setSaving(false);
+      }
     }
   };
 
   return (
-    <form className="prediction-form" onSubmit={handleSubmit}>
+    <div className="prediction-form">
       {renderInput()}
-      <button type="submit" className="btn btn--primary" disabled={saving || !answer}>
-        <Send size={16} />
-        {saving ? "Saving..." : existingAnswer ? "Update" : "Submit"}
-      </button>
-      {error && (
-        <p className="form-error" style={{ display: "flex", alignItems: "center", gap: "0.375rem", width: "100%" }}>
-          <XCircle size={14} /> {error}
-        </p>
-      )}
-      {success && (
-        <p className="form-success" style={{ display: "flex", alignItems: "center", gap: "0.375rem", width: "100%" }}>
-          <CheckCircle size={14} /> Saved!
-        </p>
-      )}
-    </form>
+      <div style={{ display: "flex", alignItems: "center", minHeight: "24px", marginTop: "0.5rem" }}>
+        {saving && (
+          <span className="text-muted" style={{ display: "flex", alignItems: "center", gap: "0.375rem", fontSize: "0.85rem" }}>
+            Saving...
+          </span>
+        )}
+        {error && !saving && (
+          <span className="form-error" style={{ display: "flex", alignItems: "center", gap: "0.375rem", fontSize: "0.85rem", margin: 0 }}>
+            <XCircle size={14} /> {error}
+          </span>
+        )}
+        {success && !saving && (
+          <span className="form-success" style={{ display: "flex", alignItems: "center", gap: "0.375rem", fontSize: "0.85rem", margin: 0 }}>
+            <CheckCircle size={14} /> Saved
+          </span>
+        )}
+      </div>
+    </div>
   );
 }
