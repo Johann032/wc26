@@ -6,6 +6,31 @@ import { useAuth } from "../context/AuthContext";
 import TournamentSelect from "../components/TournamentSelect";
 import { Trophy, Medal } from "lucide-react";
 
+const MovementIndicator = ({ movement, verbose = false }) => {
+  if (movement === null || movement === undefined) {
+    return <span style={{ color: "var(--color-text-muted, gray)", fontSize: "0.9em" }}>—</span>;
+  }
+  if (movement > 0) {
+    return (
+      <span style={{ color: "var(--color-success, #22c55e)", display: "inline-flex", alignItems: "center", gap: "2px", fontWeight: 600 }}>
+        ↑{movement} {verbose && <span style={{ fontWeight: 400, fontSize: "0.85em", color: "var(--color-text-muted, gray)" }}>since last match</span>}
+      </span>
+    );
+  }
+  if (movement < 0) {
+    return (
+      <span style={{ color: "var(--color-danger, #ef4444)", display: "inline-flex", alignItems: "center", gap: "2px", fontWeight: 600 }}>
+        ↓{Math.abs(movement)} {verbose && <span style={{ fontWeight: 400, fontSize: "0.85em", color: "var(--color-text-muted, gray)" }}>since last match</span>}
+      </span>
+    );
+  }
+  return (
+    <span style={{ color: "var(--color-text-muted, gray)", display: "inline-flex", alignItems: "center", gap: "2px", fontWeight: 600 }}>
+      → {verbose && <span style={{ fontWeight: 400, fontSize: "0.85em" }}>No change</span>}
+    </span>
+  );
+};
+
 export default function LeaderboardPage() {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
@@ -99,6 +124,9 @@ export default function LeaderboardPage() {
                     <div className="podium__stats">
                       {entry.exact_predictions} exact · {entry.correct_predictions} correct
                     </div>
+                    <div style={{ marginTop: "0.5rem" }}>
+                      <MovementIndicator movement={entry.movement} verbose={true} />
+                    </div>
                   </div>
                 );
               })}
@@ -131,12 +159,17 @@ export default function LeaderboardPage() {
                       )}
                     </td>
                     <td style={{ fontWeight: entry.user_id === user?.id ? 600 : 400 }}>
-                      {entry.display_name}
-                      {entry.user_id === user?.id && (
-                        <span className="badge badge--gold" style={{ marginLeft: "0.5rem" }}>
-                          You
-                        </span>
-                      )}
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                        <div>
+                          {entry.display_name}
+                          {entry.user_id === user?.id && (
+                            <span className="badge badge--gold" style={{ marginLeft: "0.5rem" }}>
+                              You
+                            </span>
+                          )}
+                        </div>
+                        <MovementIndicator movement={entry.movement} />
+                      </div>
                     </td>
                     <td
                       style={{

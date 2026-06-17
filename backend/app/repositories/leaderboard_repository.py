@@ -10,11 +10,25 @@ from app.models.user import User
 class LeaderboardRepository:
     @staticmethod
     def get_leaderboard(tournament_id):
+        # Find the latest scored match's kickoff time
+        latest_match = (
+            db.session.query(Match)
+            .join(PredictionQuestion)
+            .filter(
+                Match.tournament_id == tournament_id,
+                PredictionQuestion.correct_answer.isnot(None),
+                PredictionQuestion.correct_answer != ""
+            )
+            .order_by(Match.kickoff_time.desc())
+            .first()
+        )
+        latest_kickoff_time = latest_match.kickoff_time if latest_match else None
+
         users = User.query.filter_by(active=True).all()
         entries = []
 
         for user in users:
-            stats = LeaderboardRepository._user_stats(user.id, tournament_id)
+            stats = LeaderboardRepository._user_stats(user.id, tournament_id, latest_kickoff_time)
 
             entries.append({
                 "user_id": user.id,
@@ -23,8 +37,25 @@ class LeaderboardRepository:
                 "exact_predictions": stats["exact_predictions"],
                 "correct_predictions": stats["correct_predictions"],
                 "earliest_submission": stats["earliest_submission"],
+                "previous_total_points": stats["previous_total_points"],
+                "previous_exact_predictions": stats["previous_exact_predictions"],
+                "previous_correct_predictions": stats["previous_correct_predictions"],
+                "previous_earliest_submission": stats["previous_earliest_submission"],
             })
 
+        # Sort for previous rank
+        entries.sort(
+            key=lambda e: (
+                -e["previous_total_points"],
+                -e["previous_exact_predictions"],
+                -e["previous_correct_predictions"],
+                e["previous_earliest_submission"] or datetime.max,
+            )
+        )
+        for index, entry in enumerate(entries):
+            entry["previous_rank"] = index + 1
+
+        # Sort for current rank
         entries.sort(
             key=lambda e: (
                 -e["total_points"],
@@ -36,14 +67,21 @@ class LeaderboardRepository:
 
         for index, entry in enumerate(entries):
             entry["rank"] = index + 1
+            entry["movement"] = entry["previous_rank"] - entry["rank"] if latest_kickoff_time else None
+            # Cleanup internal fields
             entry.pop("earliest_submission", None)
+            entry.pop("previous_total_points", None)
+            entry.pop("previous_exact_predictions", None)
+            entry.pop("previous_correct_predictions", None)
+            entry.pop("previous_earliest_submission", None)
+            entry.pop("previous_rank", None)
 
         return entries
 
     @staticmethod
-    def _user_stats(user_id, tournament_id):
+    def _user_stats(user_id, tournament_id, latest_kickoff_time=None):
         predictions = (
-            db.session.query(Prediction, PredictionQuestion)
+            db.session.query(Prediction, PredictionQuestion, Match)
             .join(
                 PredictionQuestion,
                 Prediction.question_id == PredictionQuestion.id,
@@ -59,27 +97,42 @@ class LeaderboardRepository:
             .all()
         )
 
-        total_points = 0
-        exact_predictions = 0
-        correct_predictions = 0
-        earliest = None
-
-        for prediction, question in predictions:
-            total_points += prediction.awarded_points or 0
-
-            if prediction.awarded_points is not None and prediction.awarded_points > 0:
-                correct_predictions += 1
-
-                if question.question_type == "exact_score":
-                    exact_predictions += 1
-
-            if prediction.submitted_at:
-                if earliest is None or prediction.submitted_at < earliest:
-                    earliest = prediction.submitted_at
-
-        return {
-            "total_points": total_points,
-            "exact_predictions": exact_predictions,
-            "correct_predictions": correct_predictions,
-            "earliest_submission": earliest,
+        stats = {
+            "total_points": 0,
+            "exact_predictions": 0,
+            "correct_predictions": 0,
+            "earliest_submission": None,
+            "previous_total_points": 0,
+            "previous_exact_predictions": 0,
+            "previous_correct_predictions": 0,
+            "previous_earliest_submission": None,
         }
+
+        for prediction, question, match in predictions:
+            pts = prediction.awarded_points or 0
+            is_correct = pts > 0
+            is_exact = is_correct and question.question_type == "exact_score"
+            sub_time = prediction.submitted_at
+
+            # Current stats
+            stats["total_points"] += pts
+            if is_correct:
+                stats["correct_predictions"] += 1
+            if is_exact:
+                stats["exact_predictions"] += 1
+            if sub_time:
+                if stats["earliest_submission"] is None or sub_time < stats["earliest_submission"]:
+                    stats["earliest_submission"] = sub_time
+
+            # Previous stats (exclude latest_kickoff_time)
+            if latest_kickoff_time is None or match.kickoff_time != latest_kickoff_time:
+                stats["previous_total_points"] += pts
+                if is_correct:
+                    stats["previous_correct_predictions"] += 1
+                if is_exact:
+                    stats["previous_exact_predictions"] += 1
+                if sub_time:
+                    if stats["previous_earliest_submission"] is None or sub_time < stats["previous_earliest_submission"]:
+                        stats["previous_earliest_submission"] = sub_time
+
+        return stats
