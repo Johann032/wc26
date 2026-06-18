@@ -2,6 +2,7 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Home, Target, Trophy, Shield, LogOut, User, Key } from "lucide-react";
+import TournamentUpdatesPopup from "./TournamentUpdatesPopup";
 import "./Layout.css";
 
 const navItems = [
@@ -146,6 +147,7 @@ export default function Layout({ children }) {
           Predict. Compete. Win.
         </span>
       </footer>
+      <TournamentUpdatesPopup />
     </div>
   );
 }
