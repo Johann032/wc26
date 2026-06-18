@@ -1044,14 +1044,24 @@ export default function AdminDashboardPage() {
             <h2 className="section-title">
               <MessageSquare size={18} style={{ color: "var(--color-gold)" }} /> Generate WhatsApp Updates
             </h2>
+            
+            <label className="form-label" style={{ marginBottom: "1rem", display: "block" }}>Active Tournament
+              <select className="input" value={selectedTournament || ""} onChange={(e) => handleTournamentChange(Number(e.target.value) || null)}>
+                <option value="">Select a tournament...</option>
+                {activeTournaments.map((t) => (
+                  <option key={t.id} value={t.id}>{t.name}</option>
+                ))}
+              </select>
+            </label>
+
             <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem", flexWrap: "wrap" }}>
-              <button className="btn btn--primary" onClick={handleGeneratePredictionReminder}>
+              <button className="btn btn--primary" onClick={handleGeneratePredictionReminder} disabled={!selectedTournament}>
                 Generate Prediction Reminder
               </button>
-              <button className="btn btn--secondary" onClick={handleGenerateNewQuestionsAnnouncement}>
+              <button className="btn btn--secondary" onClick={handleGenerateNewQuestionsAnnouncement} disabled={!selectedTournament}>
                 Generate New Questions Announcement
               </button>
-              <button className="btn btn--danger" onClick={handleGenerateLastCallReminder}>
+              <button className="btn btn--danger" onClick={handleGenerateLastCallReminder} disabled={!selectedTournament}>
                 Generate Last Call Reminder
               </button>
             </div>
