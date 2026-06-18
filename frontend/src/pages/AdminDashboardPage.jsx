@@ -402,6 +402,85 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const handleGenerateQuestions = async () => {
+    if (questions && questions.length > 0) {
+      notify("This match already contains questions.", "error");
+      return;
+    }
+
+    const match = matches?.find(m => m.id === selectedMatch);
+    if (!match) return;
+
+    const t1 = match.team1;
+    const t2 = match.team2;
+
+    const POOL_A = [
+      { text: "Will both teams score?", type: "yes_no" },
+      { text: "Which team will score first?", type: "multiple_choice", choices: [t1, t2, "No Goals"] },
+      { text: "How many teams will score?", type: "multiple_choice", choices: ["0", "1", "2"] }
+    ];
+
+    const POOL_B = [
+      { text: "How many goals will be scored?", type: "multiple_choice", choices: ["0-1", "2-3", "4-5", "6+"] },
+      { text: "Which half will have more goals?", type: "multiple_choice", choices: ["First Half", "Second Half", "Same Number", "No Goals"] },
+      { text: "Will there be a goal after the 75th minute?", type: "yes_no" }
+    ];
+
+    const q1 = {
+      match_id: selectedMatch,
+      question_text: "Who will win the match?",
+      question_type: "winner",
+      point_value: 1,
+      options_json: { choices: [t1, t2, "Draw"] }
+    };
+
+    const selA = POOL_A[Math.floor(Math.random() * POOL_A.length)];
+    const q2 = {
+      match_id: selectedMatch,
+      question_text: selA.text,
+      question_type: selA.type,
+      point_value: 1,
+      ...(selA.choices ? { options_json: { choices: selA.choices } } : {})
+    };
+
+    const selB = POOL_B[Math.floor(Math.random() * POOL_B.length)];
+    const q3 = {
+      match_id: selectedMatch,
+      question_text: selB.text,
+      question_type: selB.type,
+      point_value: 1,
+      ...(selB.choices ? { options_json: { choices: selB.choices } } : {})
+    };
+
+    try {
+      const results = await Promise.allSettled([
+        api.createQuestion(q1),
+        api.createQuestion(q2),
+        api.createQuestion(q3)
+      ]);
+
+      const failed = results.filter(r => r.status === "rejected");
+      
+      if (failed.length > 0) {
+        // Rollback successful creations to ensure all-or-nothing
+        const succeeded = results.filter(r => r.status === "fulfilled");
+        await Promise.all(
+          succeeded.map(r => 
+            r.value?.id ? api.deleteQuestion(r.value.id).catch(() => {}) : Promise.resolve()
+          )
+        );
+        notify("Failed to generate all questions. Changes were rolled back.", "error");
+        refetchQuestions();
+        return;
+      }
+
+      notify("Generated exactly 3 questions successfully");
+      refetchQuestions();
+    } catch (err) {
+      notify(`Unexpected error during generation: ${err.message}`, "error");
+    }
+  };
+
   const handleDeleteQuestion = async (id) => {
     if (!confirm("Delete this question?")) return;
     try {
@@ -747,6 +826,21 @@ export default function AdminDashboardPage() {
           )}
           {selectedMatch && (
             <>
+              <div className="card" style={{ marginBottom: "1rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <h3 style={{ margin: 0 }}>Auto-Generate</h3>
+                  <p className="text-muted" style={{ margin: 0, fontSize: "0.9rem" }}>Create 3 balanced questions instantly.</p>
+                </div>
+                <button 
+                  type="button" 
+                  className="btn btn--primary" 
+                  onClick={handleGenerateQuestions}
+                  disabled={questions && questions.length > 0}
+                  title={questions && questions.length > 0 ? "This match already contains questions." : ""}
+                >
+                  Generate Questions
+                </button>
+              </div>
               <form className="card form" onSubmit={handleCreateQuestion}>
                 <h3 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                   <Plus size={16} /> Create Question
