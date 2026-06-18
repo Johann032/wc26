@@ -4,7 +4,7 @@ import { useFetch } from "../hooks/useFetch";
 import Alert from "../components/Alert";
 import {
   BarChart3, Trophy, Users, Swords, HelpCircle, CheckSquare,
-  Plus, Trash2, Save, Archive, RefreshCw, UserPlus, UserCheck, UserX, Key,
+  Plus, Trash2, Save, Archive, RefreshCw, UserPlus, UserCheck, UserX, Key, MessageSquare, Copy
 } from "lucide-react";
 
 const QUESTION_TYPES = ["winner", "exact_score", "multiple_choice", "yes_no", "number"];
@@ -240,6 +240,7 @@ export default function AdminDashboardPage() {
   const [matchForm, setMatchForm] = useState(emptyMatchForm());
   const [questionForm, setQuestionForm] = useState(emptyQuestionForm());
   const [resultAnswers, setResultAnswers] = useState({});
+  const [whatsappMessage, setWhatsappMessage] = useState("");
 
   const { data: matches, loading: loadingMatches, refetch: refetchMatches } = useFetch(
     () => (selectedTournament ? api.getMatchesForTournament(selectedTournament) : Promise.resolve([])),
@@ -518,6 +519,114 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const formatTimeRemaining = (kickoff) => {
+    const diff = new Date(kickoff) - new Date();
+    if (diff <= 0) return "Started";
+    const h = Math.floor(diff / (1000 * 60 * 60));
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    if (h > 48) return `${Math.floor(h/24)} days`;
+    if (h > 0) return `${h}h ${m}m`;
+    return `${m}m`;
+  };
+
+  const handleGeneratePredictionReminder = async () => {
+    if (!selectedTournament) return notify("Select a tournament first", "error");
+    try {
+      const matches = await api.getMatchesForTournament(selectedTournament);
+      const upcoming = matches.filter(m => m.status === "scheduled").sort((a, b) => new Date(a.kickoff_time) - new Date(b.kickoff_time));
+      const nextMatch = upcoming[0];
+      if (!nextMatch) return notify("No upcoming matches found", "error");
+
+      const participation = await api.getMatchParticipation(nextMatch.id);
+      
+      let msg = `🏆 Guppy World Cup 2026\n\n⚠ ACTION REQUIRED\n\nMatch:\n${nextMatch.team1} vs ${nextMatch.team2}\n\n`;
+      msg += `Prediction Lock:\n${formatTimeRemaining(nextMatch.kickoff_time)}\n\n`;
+
+      if (participation.pending_users && participation.pending_users.length > 0) {
+        msg += `Pending Players:\n`;
+        participation.pending_users.forEach(u => {
+          msg += `• ${u.display_name}\n`;
+        });
+      } else {
+        msg += `All players have predicted!\n`;
+      }
+      
+      msg += `\n✅ Fully Predicted: ${participation.submitted_count} players\n`;
+      msg += `⚠ Pending: ${participation.pending_count} players\n\n`;
+      msg += `Please submit predictions before lock.\n\n${window.location.origin}`;
+      
+      setWhatsappMessage(msg);
+      notify("Generated Prediction Reminder");
+    } catch (err) {
+      notify(err.message, "error");
+    }
+  };
+
+  const handleGenerateNewQuestionsAnnouncement = async () => {
+    if (!selectedTournament) return notify("Select a tournament first", "error");
+    try {
+      const matches = await api.getMatchesForTournament(selectedTournament);
+      const upcoming = matches.filter(m => m.status === "scheduled").sort((a, b) => new Date(a.kickoff_time) - new Date(b.kickoff_time));
+      const nextMatch = upcoming[0];
+      if (!nextMatch) return notify("No upcoming matches found", "error");
+
+      let msg = `🏆 Guppy World Cup 2026\n\n⚽ New Match Questions Available\n\n`;
+      msg += `Match:\n${nextMatch.team1} vs ${nextMatch.team2}\n\n`;
+      msg += `Questions are now live.\n\n`;
+      msg += `Prediction Lock:\n${formatTimeRemaining(nextMatch.kickoff_time)}\n\n`;
+      msg += `Make your predictions now:\n${window.location.origin}`;
+
+      setWhatsappMessage(msg);
+      notify("Generated New Questions Announcement");
+    } catch (err) {
+      notify(err.message, "error");
+    }
+  };
+
+  const handleGenerateLastCallReminder = async () => {
+    if (!selectedTournament) return notify("Select a tournament first", "error");
+    try {
+      const matches = await api.getMatchesForTournament(selectedTournament);
+      const upcoming = matches.filter(m => m.status === "scheduled").sort((a, b) => new Date(a.kickoff_time) - new Date(b.kickoff_time));
+      const nextMatch = upcoming[0];
+      if (!nextMatch) return notify("No upcoming matches found", "error");
+
+      const msUntilLock = new Date(nextMatch.kickoff_time) - new Date();
+      const hoursUntilLock = msUntilLock / (1000 * 60 * 60);
+
+      if (hoursUntilLock > 3) {
+        return notify("Match is not within 3 hours. Use Prediction Reminder instead.", "error");
+      }
+
+      const participation = await api.getMatchParticipation(nextMatch.id);
+      
+      let msg = `🚨 LAST CALL\n\nMatch:\n${nextMatch.team1} vs ${nextMatch.team2}\n\n`;
+      msg += `Prediction lock in:\n${formatTimeRemaining(nextMatch.kickoff_time)}\n\n`;
+
+      if (participation.pending_users && participation.pending_users.length > 0) {
+        msg += `Still Pending:\n`;
+        participation.pending_users.forEach(u => {
+          msg += `• ${u.display_name}\n`;
+        });
+      } else {
+        msg += `All players have predicted!\n`;
+      }
+      
+      msg += `\nSubmit now or miss the match.\n\n${window.location.origin}`;
+      
+      setWhatsappMessage(msg);
+      notify("Generated Last Call Reminder");
+    } catch (err) {
+      notify(err.message, "error");
+    }
+  };
+
+  const handleCopyWhatsappMessage = () => {
+    if (!whatsappMessage) return;
+    navigator.clipboard.writeText(whatsappMessage);
+    notify("Copied to clipboard.");
+  };
+
   if (loading) return <div className="loading">Loading admin dashboard...</div>;
   if (error) return <div className="error">{error}</div>;
 
@@ -529,6 +638,7 @@ export default function AdminDashboardPage() {
     { id: "questions", label: "Questions", icon: HelpCircle },
     { id: "results", label: "Results", icon: CheckSquare },
     { id: "participation", label: "Participation", icon: Users },
+    { id: "communications", label: "Communications", icon: MessageSquare },
   ];
 
   return (
@@ -924,6 +1034,45 @@ export default function AdminDashboardPage() {
               <RefreshCw size={16} /> Recalculate Scores
             </button>
           )}
+        </div>
+      )}
+
+      {/* COMMUNICATIONS */}
+      {activeSection === "communications" && (
+        <div className="animate-in">
+          <div className="card">
+            <h2 className="section-title">
+              <MessageSquare size={18} style={{ color: "var(--color-gold)" }} /> Generate WhatsApp Updates
+            </h2>
+            <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem", flexWrap: "wrap" }}>
+              <button className="btn btn--primary" onClick={handleGeneratePredictionReminder}>
+                Generate Prediction Reminder
+              </button>
+              <button className="btn btn--secondary" onClick={handleGenerateNewQuestionsAnnouncement}>
+                Generate New Questions Announcement
+              </button>
+              <button className="btn btn--danger" onClick={handleGenerateLastCallReminder}>
+                Generate Last Call Reminder
+              </button>
+            </div>
+
+            {whatsappMessage && (
+              <div style={{ marginTop: "1rem" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+                  <label className="form-label" style={{ margin: 0 }}>Message Preview</label>
+                  <button className="btn btn--small btn--primary" onClick={handleCopyWhatsappMessage} style={{ display: "flex", gap: "0.3rem", alignItems: "center" }}>
+                    <Copy size={14} /> Copy to Clipboard
+                  </button>
+                </div>
+                <textarea 
+                  className="input" 
+                  style={{ width: "100%", height: "300px", fontFamily: "monospace", resize: "vertical", background: "rgba(0,0,0,0.2)" }} 
+                  readOnly 
+                  value={whatsappMessage} 
+                />
+              </div>
+            )}
+          </div>
         </div>
       )}
       </div>
