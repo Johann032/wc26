@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { Home, Target, Trophy, Shield, LogOut, User, Key } from "lucide-react";
+import { Home, Target, Trophy, Shield, LogOut, User, Key, BarChart2 } from "lucide-react";
 import TournamentUpdatesPopup from "./TournamentUpdatesPopup";
 import "./Layout.css";
 
@@ -9,6 +9,7 @@ const navItems = [
   { to: "/", label: "Home", icon: Home, end: true },
   { to: "/predictions", label: "Predictions", icon: Target },
   { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
+  { to: "/insights", label: "Insights", icon: BarChart2 },
 ];
 
 function getInitials(name) {

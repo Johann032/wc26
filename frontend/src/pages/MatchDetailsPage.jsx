@@ -3,7 +3,6 @@ import { Link, useParams } from "react-router-dom";
 import { api } from "../api/client";
 import { useFetch } from "../hooks/useFetch";
 import PredictionForm from "../components/PredictionForm";
-import PostMatchBreakdown from "../components/PostMatchBreakdown";
 import { ChevronLeft, Clock, Target } from "lucide-react";
 
 function getStageScoringText(stage) {
@@ -73,11 +72,6 @@ export default function MatchDetailsPage() {
   const { data: myPredictions, loading: loadingPredictions, error: predictionsError } = useFetch(
     () => api.getMyPredictionsForMatch(matchId),
     [matchId, refreshKey],
-  );
-
-  const { data: breakdown } = useFetch(
-    () => match?.status === "finished" ? api.getMatchBreakdown(matchId) : Promise.resolve(null),
-    [matchId, match?.status, refreshKey]
   );
 
   const predictionMap = {};
@@ -196,14 +190,6 @@ export default function MatchDetailsPage() {
           </div>
           );
         })
-      )}
-
-      {match.status === "finished" && breakdown && (
-        <PostMatchBreakdown
-          match={match}
-          breakdown={breakdown}
-          myPerformance={myPredictions}
-        />
       )}
       </div>
     </div>

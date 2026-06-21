@@ -11,6 +11,8 @@ import LeaderboardPage from "./pages/LeaderboardPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import ChangePinPage from "./pages/ChangePinPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import InsightsPage from "./pages/InsightsPage";
+import MatchBreakdownPage from "./pages/MatchBreakdownPage";
 
 export default function App() {
   return (
@@ -27,6 +29,8 @@ export default function App() {
                 <Route path="/matches/:matchId" element={<MatchDetailsPage />} />
                 <Route path="/predictions" element={<PredictionsPage />} />
                 <Route path="/leaderboard" element={<LeaderboardPage />} />
+                <Route path="/insights" element={<InsightsPage />} />
+                <Route path="/insights/match/:matchId" element={<MatchBreakdownPage />} />
                 <Route path="/change-pin" element={<ChangePinPage />} />
                 <Route
                   path="/admin"
