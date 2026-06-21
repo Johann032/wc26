@@ -58,6 +58,7 @@ export const api = {
   getMatchesForTournament: (tournamentId) =>
     request(`/matches/tournament/${tournamentId}`),
   getMatch: (id) => request(`/matches/${id}`),
+  getMatchBreakdown: (id) => request(`/matches/${id}/breakdown`),
   createMatch: (data) =>
     request("/matches", { method: "POST", body: JSON.stringify(data) }),
   updateMatch: (id, data) =>

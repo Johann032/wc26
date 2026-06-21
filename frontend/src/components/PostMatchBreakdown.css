@@ -1,0 +1,267 @@
+.post-match-breakdown {
+  background-color: #1a1a1a;
+  color: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  margin-top: 32px;
+  border: 1px solid #d4af37; /* Gold accent */
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15);
+  font-family: 'Inter', sans-serif;
+}
+
+.pmb-header {
+  text-align: center;
+  border-bottom: 2px solid #333;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+
+.pmb-header h2 {
+  color: #d4af37;
+  margin: 0 0 8px 0;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.pmb-match-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.pmb-section {
+  margin-bottom: 32px;
+}
+
+.pmb-section h3 {
+  color: #d4af37;
+  border-bottom: 1px solid #333;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  font-size: 1.2rem;
+}
+
+.pmb-subtitle {
+  font-size: 0.85rem;
+  color: #aaa;
+  margin-top: -12px;
+  margin-bottom: 16px;
+}
+
+/* Community Predictions */
+.pmb-question-stats {
+  background-color: #2a2a2a;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.pmb-q-title {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.pmb-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pmb-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pmb-bar-label {
+  width: 100px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pmb-bar-track {
+  flex: 1;
+  background-color: #444;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.pmb-bar-fill {
+  height: 100%;
+  background-color: #d4af37;
+  border-radius: 6px;
+  transition: width 0.5s ease-out;
+}
+
+.pmb-bar-pct {
+  width: 40px;
+  text-align: right;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.pmb-q-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #ccc;
+  border-top: 1px solid #444;
+  padding-top: 12px;
+}
+
+.pmb-q-correct strong {
+  color: #4caf50;
+}
+
+/* Leaders */
+.pmb-leaders-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.pmb-leader-card {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 16px;
+}
+
+.pmb-leader-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #444;
+  padding-bottom: 8px;
+}
+
+.pmb-leader-medal {
+  font-size: 1.2rem;
+}
+
+.pmb-leader-name {
+  font-weight: bold;
+  flex: 1;
+}
+
+.pmb-leader-points {
+  color: #d4af37;
+  font-weight: bold;
+}
+
+.pmb-leader-preds, .pmb-personal-preds {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pmb-leader-pred, .pmb-personal-pred {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.pmb-icon {
+  font-weight: bold;
+}
+
+.correct .pmb-icon {
+  color: #4caf50;
+}
+
+.incorrect .pmb-icon {
+  color: #f44336;
+}
+
+.incorrect .pmb-text {
+  color: #aaa;
+  text-decoration: line-through;
+}
+
+/* Movers */
+.pmb-movers-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.pmb-mover-row {
+  display: flex;
+  justify-content: space-between;
+  background-color: #2a2a2a;
+  padding: 12px 16px;
+  border-radius: 6px;
+}
+
+.pmb-mover-name {
+  font-weight: bold;
+}
+
+.pmb-mover-movement {
+  font-weight: bold;
+}
+
+.pmb-mover-movement.up {
+  color: #4caf50;
+}
+
+.pmb-mover-movement.down {
+  color: #f44336;
+}
+
+.pmb-no-movers {
+  color: #aaa;
+  font-style: italic;
+}
+
+/* Personal */
+.pmb-personal {
+  background-color: #222;
+  padding: 16px;
+  border-radius: 6px;
+  border-left: 4px solid #d4af37;
+}
+
+.pmb-personal-total {
+  font-size: 1.5rem;
+  color: #d4af37;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+/* Match Facts */
+.pmb-facts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.pmb-fact-card {
+  background-color: #2a2a2a;
+  border-radius: 6px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid #444;
+  text-align: center;
+}
+
+.pmb-fact-label {
+  font-size: 0.85rem;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.pmb-fact-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #d4af37;
+}

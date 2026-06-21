@@ -55,3 +55,14 @@ def delete_match(match_id):
     status = 404 if error == "Match not found" else 400
     return jsonify({"error": error}), status
   return jsonify({"message": "Match deleted"})
+
+@matches_bp.get("/<int:match_id>/breakdown")
+@login_required
+def get_match_breakdown(match_id):
+  from app.services.match_breakdown_service import MatchBreakdownService
+  breakdown_service = MatchBreakdownService()
+  breakdown, error = breakdown_service.get_breakdown(match_id)
+  if error:
+    status = 403 if "only available for finished" in error else 404
+    return jsonify({"error": error}), status
+  return jsonify(breakdown)
