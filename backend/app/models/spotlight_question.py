@@ -13,6 +13,7 @@ class SpotlightQuestion(TimestampMixin, db.Model):
     index=True,
   )
   title = db.Column(db.String(255), nullable=False)
+  description = db.Column(db.Text, nullable=True)
   question_type = db.Column(db.String(50), nullable=False) # e.g., "multi_select", "single_select"
   num_selections = db.Column(db.Integer, nullable=False, default=1)
   options_json = db.Column(db.JSON, nullable=False)
@@ -34,6 +35,7 @@ class SpotlightQuestion(TimestampMixin, db.Model):
       "id": self.id,
       "tournament_id": self.tournament_id,
       "title": self.title,
+      "description": self.description,
       "question_type": self.question_type,
       "num_selections": self.num_selections,
       "options_json": self.options_json,

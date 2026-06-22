@@ -128,6 +128,11 @@ export default function OraclePage() {
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1rem" }}>
                     <div>
                       <h3 style={{ margin: "0 0 0.5rem 0", color: "var(--color-gold)" }}>{q.title}</h3>
+                      {q.description && (
+                        <p style={{ margin: "0 0 1rem 0", color: "var(--color-text)", fontSize: "0.95rem", whiteSpace: "pre-wrap", opacity: 0.9 }}>
+                          {q.description}
+                        </p>
+                      )}
                       <p className="text-muted" style={{ margin: 0, fontSize: "0.9rem" }}>
                         Select EXACTLY {q.num_selections} • {q.max_points} Points Possible
                       </p>

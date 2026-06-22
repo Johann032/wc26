@@ -19,6 +19,7 @@ with app.app_context():
     q1 = SpotlightQuestion(
         tournament_id=t.id,
         title="🏆 Predict The World Cup Final",
+        description="Predict the exact TWO teams that will play in the final.\n\nSelect EXACTLY 2 teams.",
         question_type="standard",
         num_selections=2,
         options_json=["Argentina", "Brazil", "France", "England", "Spain", "Germany", "Portugal", "Netherlands", "Italy", "Belgium", "Uruguay", "Croatia", "Morocco", "USA", "Colombia"],
@@ -30,6 +31,7 @@ with app.app_context():
     q2 = SpotlightQuestion(
         tournament_id=t.id,
         title="🌟 THE ORACLE'S PROPHECY",
+        description="Predict the exact four semi-finalists.\n\nSelect EXACTLY 4 teams.",
         question_type="standard",
         num_selections=4,
         options_json=["Argentina", "Brazil", "France", "England", "Spain", "Germany", "Portugal", "Netherlands", "Italy", "Belgium", "Uruguay", "Croatia", "Morocco", "USA", "Colombia"],
@@ -41,6 +43,7 @@ with app.app_context():
     q3 = SpotlightQuestion(
         tournament_id=t.id,
         title="👑 THE CROWN OF PROPHECY",
+        description="Predict ALL THREE of the following:\n1. FIFA World Cup Champion\n2. Golden Boot Winner\n3. Golden Ball Winner\n\nSelect exactly one answer for each category.",
         question_type="categorical",
         num_selections=3,
         options_json={
