@@ -12,7 +12,7 @@ class SpotlightService:
     questions = SpotlightQuestion.query.filter_by(tournament_id=tournament_id).all()
     result = []
     for q in questions:
-      is_locked = q.locked or (q.lock_time and utcnow() >= q.lock_time)
+      is_locked = q.locked or (q.lock_time and utcnow().replace(tzinfo=None) >= q.lock_time)
       q_dict = q.to_dict(include_answer=True)
       q_dict["is_locked"] = is_locked
       
@@ -69,7 +69,7 @@ class SpotlightService:
     if not question:
       return {"error": "Question not found"}, 404
       
-    if question.locked or (question.lock_time and utcnow() >= question.lock_time):
+    if question.locked or (question.lock_time and utcnow().replace(tzinfo=None) >= question.lock_time):
       return {"error": "Question is locked"}, 403
 
     if question.question_type == "categorical":
