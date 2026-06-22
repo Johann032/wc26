@@ -102,5 +102,14 @@ export const api = {
       method: "POST",
       body: JSON.stringify(tournamentId ? { tournament_id: tournamentId } : {}),
     }),
+
+  getSpotlightQuestions: (tournamentId) => request(`/spotlight/tournament/${tournamentId}`),
+  submitSpotlightPrediction: (question_id, answers_json) =>
+    request("/spotlight/prediction", {
+      method: "POST",
+      body: JSON.stringify({ question_id, answers_json }),
+    }),
+  getOracleLeaderboard: (tournamentId) => request(`/spotlight/leaderboard/${tournamentId}`),
+  getOracleStats: (tournamentId) => request(`/spotlight/stats/${tournamentId}`),
 };
 

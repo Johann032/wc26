@@ -14,6 +14,7 @@ class User(TimestampMixin, db.Model):
   force_pin_change = db.Column(db.Boolean, nullable=False, default=False)
 
   predictions = db.relationship("Prediction", back_populates="user", lazy="dynamic")
+  spotlight_predictions = db.relationship("SpotlightPrediction", back_populates="user", lazy="dynamic")
 
   def set_display_name(self, name):
     self.display_name = name.strip()

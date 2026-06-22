@@ -12,6 +12,7 @@ class Tournament(TimestampMixin, db.Model):
   status = db.Column(db.String(20), nullable=False, default="upcoming")
 
   matches = db.relationship("Match", back_populates="tournament", lazy="dynamic")
+  spotlight_questions = db.relationship("SpotlightQuestion", back_populates="tournament", lazy="dynamic")
 
   def to_dict(self):
     return {

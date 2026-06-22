@@ -3,6 +3,7 @@ import { api } from "../api/client";
 import { useFetch } from "../hooks/useFetch";
 import { useAuth } from "../context/AuthContext";
 import { Trophy, Target, Calendar, ChevronRight, Star } from "lucide-react";
+import OracleCard from "../components/OracleCard";
 
 export default function HomePage() {
   const { data: tournaments, loading, error } = useFetch(() => api.getTournaments(), []);
@@ -46,6 +47,11 @@ export default function HomePage() {
           <ChevronRight size={18} className="card--action__arrow" />
         </Link>
       </div>
+
+      {/* Oracle Challenge Card */}
+      {tournaments && tournaments.length > 0 && (
+        <OracleCard tournamentId={tournaments[0].id} />
+      )}
 
       {/* Tournaments Section */}
       <div className="tournaments-section">

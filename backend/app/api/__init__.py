@@ -6,6 +6,7 @@ from app.api.questions import questions_bp
 from app.api.predictions import predictions_bp
 from app.api.leaderboard import leaderboard_bp
 from app.api.admin import admin_bp
+from app.api.spotlight_routes import spotlight_bp
 
 
 def register_blueprints(app):
@@ -17,3 +18,4 @@ def register_blueprints(app):
   app.register_blueprint(predictions_bp, url_prefix="/api/predictions")
   app.register_blueprint(leaderboard_bp, url_prefix="/api/leaderboard")
   app.register_blueprint(admin_bp, url_prefix="/api/admin")
+  app.register_blueprint(spotlight_bp, url_prefix="/api/spotlight")
