@@ -3,9 +3,9 @@ import { Star, Eye } from "lucide-react";
 import { useFetch } from "../hooks/useFetch";
 import { api } from "../api/client";
 
-export default function OracleCard({ tournamentId }) {
+export default function JackpotCard({ tournamentId }) {
   const { data: stats } = useFetch(
-    () => (tournamentId ? api.getOracleStats(tournamentId) : Promise.resolve(null)),
+    () => (tournamentId ? api.getJackpotStats(tournamentId) : Promise.resolve(null)),
     [tournamentId]
   );
 
@@ -26,20 +26,20 @@ export default function OracleCard({ tournamentId }) {
       className="animate-in"
     >
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-        <Eye size={24} fill="var(--color-gold)" color="#000" />
+        <Trophy size={24} fill="var(--color-gold)" color="#000" />
         <h2 style={{ margin: 0, fontSize: "1.25rem", color: "var(--color-gold)", textTransform: "uppercase", letterSpacing: "1px" }}>
-          THE ORACLE CHALLENGE
+          🏆 WORLD CUP JACKPOT
         </h2>
       </div>
       
       <p style={{ margin: 0, fontSize: "0.95rem", color: "var(--color-text)", opacity: 0.9, fontStyle: "italic" }}>
-        Only the truly elite can predict the future.
+        45 BONUS POINTS AVAILABLE
       </p>
 
       <p style={{ margin: 0, fontSize: "0.95rem", color: "var(--color-text)" }}>
-        <strong style={{ color: "var(--color-gold)" }}>45 BONUS POINTS</strong>
+        <strong style={{ color: "var(--color-gold)" }}>Only 3 Special Questions</strong>
         <br />
-        <span style={{ fontSize: "0.85rem", opacity: 0.8 }}>Only 3 Questions. Only One Chance.</span>
+        <span style={{ fontSize: "0.85rem", opacity: 0.8 }}>Only One Chance.</span>
       </p>
 
       {stats && (
@@ -54,7 +54,7 @@ export default function OracleCard({ tournamentId }) {
       )}
 
       <Link
-        to={tournamentId ? `/tournaments/${tournamentId}/oracle` : "/oracle"}
+        to={tournamentId ? `/tournaments/${tournamentId}/jackpot` : "/jackpot"}
         className="btn btn--primary"
         style={{
           marginTop: "0.5rem",
@@ -65,7 +65,7 @@ export default function OracleCard({ tournamentId }) {
           textAlign: "center"
         }}
       >
-        Enter The Challenge
+        Submit Jackpot Predictions
       </Link>
     </div>
   );

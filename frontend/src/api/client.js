@@ -109,7 +109,10 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ question_id, answers_json }),
     }),
-  getOracleLeaderboard: (tournamentId) => request(`/spotlight/leaderboard/${tournamentId}`),
-  getOracleStats: (tournamentId) => request(`/spotlight/stats/${tournamentId}`),
+  getJackpotStandings: async (tournamentId) => {
+    return request(`/spotlight/leaderboard/${tournamentId}`);
+  },
+  getJackpotStats: async (tournamentId) => {
+    return request(`/spotlight/stats/${tournamentId}`);
+  },
 };
-

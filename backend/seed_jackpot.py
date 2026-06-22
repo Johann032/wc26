@@ -3,10 +3,21 @@ from app.extensions import db
 from app.models.spotlight_question import SpotlightQuestion
 from app.models.tournament import Tournament
 from datetime import datetime
+from sqlalchemy import text
+from sqlalchemy.exc import OperationalError
 
 app = create_app()
 
 with app.app_context():
+    # Ensure description column exists in case the user hasn't migrated their database
+    try:
+        db.session.execute(text("SELECT description FROM spotlight_questions LIMIT 1"))
+    except OperationalError:
+        # Catch exception and add column safely
+        db.session.execute(text("ALTER TABLE spotlight_questions ADD COLUMN description TEXT"))
+        db.session.commit()
+        print("Migrated spotlight_questions table to include description column.")
+
     # Find active tournament
     t = Tournament.query.first()
     if not t:
@@ -18,8 +29,8 @@ with app.app_context():
     
     q1 = SpotlightQuestion(
         tournament_id=t.id,
-        title="🏆 Predict The World Cup Final",
-        description="Predict the exact TWO teams that will play in the final.\n\nSelect EXACTLY 2 teams.",
+        title="🏆 Who will play in the FIFA World Cup Final?",
+        description="Select EXACTLY 2 teams.",
         question_type="standard",
         num_selections=2,
         options_json=["Argentina", "Brazil", "France", "England", "Spain", "Germany", "Portugal", "Netherlands", "Italy", "Belgium", "Uruguay", "Croatia", "Morocco", "USA", "Colombia"],
@@ -30,8 +41,8 @@ with app.app_context():
     
     q2 = SpotlightQuestion(
         tournament_id=t.id,
-        title="🌟 THE ORACLE'S PROPHECY",
-        description="Predict the exact four semi-finalists.\n\nSelect EXACTLY 4 teams.",
+        title="🌟 Which FOUR teams will qualify for the Semi-Finals?",
+        description="Select EXACTLY 4 teams.",
         question_type="standard",
         num_selections=4,
         options_json=["Argentina", "Brazil", "France", "England", "Spain", "Germany", "Portugal", "Netherlands", "Italy", "Belgium", "Uruguay", "Croatia", "Morocco", "USA", "Colombia"],
@@ -42,12 +53,12 @@ with app.app_context():
     
     q3 = SpotlightQuestion(
         tournament_id=t.id,
-        title="👑 THE CROWN OF PROPHECY",
-        description="Predict ALL THREE of the following:\n1. FIFA World Cup Champion\n2. Golden Boot Winner\n3. Golden Ball Winner\n\nSelect exactly one answer for each category.",
+        title="👑 Predict ALL THREE",
+        description="* FIFA World Cup Winner\n* Golden Boot Winner\n* Golden Ball Winner",
         question_type="categorical",
         num_selections=3,
         options_json={
-            "FIFA World Cup Champion": ["Argentina", "Brazil", "France", "England", "Spain", "Germany", "Portugal", "Netherlands"],
+            "FIFA World Cup Winner": ["Argentina", "Brazil", "France", "England", "Spain", "Germany", "Portugal", "Netherlands"],
             "Golden Boot Winner": ["Messi", "Mbappe", "Kane", "Vinicius Jr", "Bellingham", "Gakpo", "Morata", "Haaland"],
             "Golden Ball Winner": ["Messi", "Mbappe", "De Bruyne", "Rodri", "Bellingham", "Pedri", "Musiala", "Neymar"]
         },
@@ -61,4 +72,4 @@ with app.app_context():
     db.session.add(q3)
     db.session.commit()
     
-    print("Seeded Oracle questions successfully!")
+    print("Seeded World Cup Jackpot questions successfully!")

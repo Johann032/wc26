@@ -13,7 +13,7 @@ import ChangePinPage from "./pages/ChangePinPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import InsightsPage from "./pages/InsightsPage";
 import MatchBreakdownPage from "./pages/MatchBreakdownPage";
-import OraclePage from "./pages/OraclePage";
+import JackpotPage from "./pages/JackpotPage";
 
 export default function App() {
   return (
@@ -32,8 +32,8 @@ export default function App() {
                 <Route path="/leaderboard" element={<LeaderboardPage />} />
                 <Route path="/insights" element={<InsightsPage />} />
                 <Route path="/insights/match/:matchId" element={<MatchBreakdownPage />} />
-                <Route path="/tournaments/:tournamentId/oracle" element={<OraclePage />} />
-                <Route path="/oracle" element={<OraclePage />} />
+                <Route path="/tournaments/:id/jackpot" element={<JackpotPage />} />
+                <Route path="/jackpot" element={<JackpotPage />} />
                 <Route path="/change-pin" element={<ChangePinPage />} />
                 <Route
                   path="/admin"

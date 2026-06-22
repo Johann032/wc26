@@ -95,7 +95,7 @@ class SpotlightService:
     return prediction.to_dict(), 200
 
   @staticmethod
-  def get_oracle_leaderboard(tournament_id):
+  def get_jackpot_standings(tournament_id):
     users = User.query.filter_by(active=True).all()
     
     # Get all predictions for this tournament

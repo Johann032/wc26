@@ -4,7 +4,7 @@ import { useFetch } from "../hooks/useFetch";
 import TournamentSelect from "../components/TournamentSelect";
 import { Eye, CheckCircle, Lock, Users, Trophy } from "lucide-react";
 
-export default function OraclePage() {
+export default function JackpotPage() {
   const [tournamentId, setTournamentId] = useState(null);
   const [answers, setAnswers] = useState({});
   const [submitting, setSubmitting] = useState(null);
@@ -22,7 +22,7 @@ export default function OraclePage() {
   );
 
   const { data: leaderboard, loading: loadingLeaderboard } = useFetch(
-    () => (activeTournamentId ? api.getOracleLeaderboard(activeTournamentId) : Promise.resolve([])),
+    () => (activeTournamentId ? api.getJackpotStandings(activeTournamentId) : Promise.resolve([])),
     [activeTournamentId]
   );
 
@@ -97,10 +97,10 @@ export default function OraclePage() {
       <header className="page-header" style={{ borderBottom: "1px solid rgba(255,215,0,0.3)", paddingBottom: "1rem" }}>
         <h1 style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--color-gold)", textTransform: "uppercase", letterSpacing: "1px" }}>
           <Eye size={28} style={{ color: "var(--color-gold)", fill: "rgba(255,215,0,0.2)" }} />
-          The Oracle Challenge
+          🏆 World Cup Jackpot
         </h1>
         <p style={{ margin: "0.5rem 0 0 0", fontStyle: "italic", opacity: 0.9 }}>
-          Only the truly elite can predict the future.
+          45 BONUS POINTS AVAILABLE
         </p>
         <div style={{ marginTop: "1rem" }}>
           <TournamentSelect value={activeTournamentId} onChange={(id) => setTournamentId(id)} />
@@ -114,7 +114,7 @@ export default function OraclePage() {
         <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
           {questions?.length === 0 ? (
             <div className="empty-state">
-              <p>The Oracle has not spoken yet.</p>
+              <p>The Jackpot has not started yet.</p>
             </div>
           ) : (
             questions?.map((q) => {
@@ -262,18 +262,18 @@ export default function OraclePage() {
         {/* Oracle Standings */}
         <div className="card" style={{ padding: "1.5rem", border: "1px solid rgba(255,215,0,0.3)" }}>
           <h2 style={{ display: "flex", alignItems: "center", gap: "0.5rem", margin: "0 0 1.5rem 0", color: "var(--color-gold)" }}>
-            <Trophy size={20} /> 🌟 Oracle Standings
+            <Trophy size={20} /> 🏆 Jackpot Standings
           </h2>
           
           {loadingLeaderboard ? (
             <div className="skeleton skeleton--card"></div>
           ) : !leaderboard || leaderboard.length === 0 ? (
-            <p className="text-muted">No Oracle points awarded yet.</p>
+            <p className="text-muted">No Jackpot points awarded yet.</p>
           ) : (
             <div className="leaderboard-table">
               <div className="leaderboard-table__row leaderboard-table__header">
                 <div className="leaderboard-table__col">Rank</div>
-                <div className="leaderboard-table__col" style={{ flex: 1 }}>Oracle</div>
+                <div className="leaderboard-table__col" style={{ flex: 1 }}>Player</div>
                 <div className="leaderboard-table__col">Points</div>
               </div>
               {leaderboard.map((entry) => {

@@ -28,8 +28,8 @@ def submit_prediction():
   return jsonify(result), status
 
 @spotlight_bp.route("/leaderboard/<int:tournament_id>", methods=["GET"])
-def get_oracle_leaderboard(tournament_id):
-  entries = SpotlightService.get_oracle_leaderboard(tournament_id)
+def get_jackpot_standings(tournament_id):
+  entries = SpotlightService.get_jackpot_standings(tournament_id)
   return jsonify(entries), 200
 
 @spotlight_bp.route("/stats/<int:tournament_id>", methods=["GET"])
