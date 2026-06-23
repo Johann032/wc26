@@ -415,16 +415,26 @@ export default function AdminDashboardPage() {
     const t1 = match.team1;
     const t2 = match.team2;
 
-    const POOL_A = [
+    const TIER_A = [
       { text: "Will both teams score?", type: "yes_no" },
       { text: "Which team will score first?", type: "multiple_choice", choices: [t1, t2, "No Goals"] },
-      { text: "How many teams will score?", type: "multiple_choice", choices: ["0", "1", "2"] }
-    ];
-
-    const POOL_B = [
+      { text: "How many teams will score?", type: "multiple_choice", choices: ["0", "1", "2"] },
       { text: "How many goals will be scored?", type: "multiple_choice", choices: ["0-1", "2-3", "4-5", "6+"] },
       { text: "Which half will have more goals?", type: "multiple_choice", choices: ["First Half", "Second Half", "Same Number", "No Goals"] },
-      { text: "Will there be a goal after the 75th minute?", type: "yes_no" }
+      { text: "Will there be a goal after the 75th minute?", type: "yes_no" },
+      { text: "Will there be a goal in the first 15 minutes?", type: "yes_no" },
+      { text: "Will there be a goal in stoppage time?", type: "yes_no" },
+      { text: "Will there be a penalty awarded?", type: "yes_no" },
+      { text: "Will there be a red card?", type: "yes_no" },
+      { text: "Will a goal be scored in both halves?", type: "yes_no" }
+    ];
+
+    const TIER_B = [
+      { text: "Which team will have more corners?", type: "multiple_choice", choices: [t1, t2, "Equal"] },
+      { text: "How many total corners will there be?", type: "multiple_choice", choices: ["0-7", "8-11", "12-15", "16+"] },
+      { text: "How many yellow cards will be shown?", type: "multiple_choice", choices: ["0-2", "3-4", "5-6", "7+"] },
+      { text: "Which team will receive more yellow cards?", type: "multiple_choice", choices: [t1, t2, "Equal"] },
+      { text: "Which team will have more offsides?", type: "multiple_choice", choices: [t1, t2, "Equal"] }
     ];
 
     const q1 = {
@@ -435,7 +445,36 @@ export default function AdminDashboardPage() {
       options_json: { choices: [t1, t2, "Draw"] }
     };
 
-    const selA = POOL_A[Math.floor(Math.random() * POOL_A.length)];
+    // Fisher-Yates shuffle
+    const shuffle = (array) => {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    };
+
+    const shuffledA = shuffle(TIER_A);
+    const shuffledB = shuffle(TIER_B);
+
+    let selectedQuestions = [];
+    
+    // Prefer Tier A (80% chance per slot), occasionally Tier B (20% chance per slot)
+    const pickTier = () => Math.random() < 0.8 ? "A" : "B";
+    
+    const choice1 = pickTier();
+    const choice2 = pickTier();
+
+    if (choice1 === "A" && choice2 === "A") {
+      selectedQuestions = [shuffledA[0], shuffledA[1]];
+    } else if (choice1 === "B" && choice2 === "B") {
+      selectedQuestions = [shuffledB[0], shuffledB[1]];
+    } else {
+      selectedQuestions = [shuffledA[0], shuffledB[0]];
+    }
+
+    const selA = selectedQuestions[0];
     const q2 = {
       match_id: selectedMatch,
       question_text: selA.text,
@@ -444,7 +483,7 @@ export default function AdminDashboardPage() {
       ...(selA.choices ? { options_json: { choices: selA.choices } } : {})
     };
 
-    const selB = POOL_B[Math.floor(Math.random() * POOL_B.length)];
+    const selB = selectedQuestions[1];
     const q3 = {
       match_id: selectedMatch,
       question_text: selB.text,
