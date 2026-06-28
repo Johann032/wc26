@@ -34,16 +34,16 @@ function IntroRevealBase() {
       if (!hasSeenIntro) {
         setIsVisible(true);
         
-        // Start fade out after 2.5s to complete by 3s
+        // Start fade out after 4.7s to complete by 5s
         const fadeTimer = setTimeout(() => {
           setIsFadingOut(true);
-        }, 2500);
+        }, 4700);
 
-        // Completely unmount after 3s
+        // Completely unmount after 5s
         const unmountTimer = setTimeout(() => {
           setIsVisible(false);
           sessionStorage.setItem("wc26_intro_seen", "true");
-        }, 3000);
+        }, 5000);
 
         return () => {
           clearTimeout(fadeTimer);
@@ -77,20 +77,32 @@ function IntroRevealBase() {
     >
       <div className="intro-reveal-content">
         
-        <div className="intro-reveal-phase-1">
+        {/* Scene 1 & 2 */}
+        <div className="intro-reveal-scene-1">
+          <div className="intro-reveal-center-light"></div>
           <h1 className="intro-reveal-title">WORLD CUP 26</h1>
+          <div className="intro-reveal-scene-2-content">
+            <div className="intro-reveal-divider"></div>
+            <h2 className="intro-reveal-subtitle">WELCOME TO THE TOURNAMENT</h2>
+          </div>
         </div>
 
-        <div className="intro-reveal-phase-2">
-          <div className="intro-reveal-sweep-line"></div>
-          <h2 className="intro-reveal-subtitle">ROUND OF 32 HAS BEGUN</h2>
+        {/* Scene 3 */}
+        <div className="intro-reveal-scene-3">
+          <h2 className="intro-reveal-stagger-text">ROUND OF 32</h2>
+          <h2 className="intro-reveal-stagger-text delay-1">32 TEAMS</h2>
+          <h2 className="intro-reveal-stagger-text delay-2">16 MATCHES</h2>
+          <h2 className="intro-reveal-stagger-text delay-3 gold-text">1 CHAMPION</h2>
         </div>
 
-        <div className="intro-reveal-phase-3">
-          <h2 className="intro-reveal-emphasis">WIN OR GO HOME</h2>
+        {/* Scene 4 */}
+        <div className="intro-reveal-scene-4">
+          <div className="intro-reveal-final-glow"></div>
+          <div className="intro-reveal-particles"></div>
+          <h1 className="intro-reveal-hero-text">WIN OR GO HOME</h1>
+          <h3 className="intro-reveal-sub-hero-text">YOUR JOURNEY STARTS NOW</h3>
         </div>
 
-        <div className="intro-reveal-stadium-glow"></div>
       </div>
     </div>
   );
