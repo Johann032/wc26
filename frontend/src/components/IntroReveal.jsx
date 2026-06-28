@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Trophy } from "lucide-react";
 import "./IntroReveal.css";
 
 class IntroErrorBoundary extends React.Component {
@@ -34,16 +35,16 @@ function IntroRevealBase() {
       if (!hasSeenIntro) {
         setIsVisible(true);
         
-        // Start fade out after 4.7s to complete by 5s
+        // Start fade out after 9.5s to complete by 10s
         const fadeTimer = setTimeout(() => {
           setIsFadingOut(true);
-        }, 4700);
+        }, 9500);
 
-        // Completely unmount after 5s
+        // Completely unmount after 10s
         const unmountTimer = setTimeout(() => {
           setIsVisible(false);
           sessionStorage.setItem("wc26_intro_seen", "true");
-        }, 5000);
+        }, 10000);
 
         return () => {
           clearTimeout(fadeTimer);
@@ -62,7 +63,7 @@ function IntroRevealBase() {
       setTimeout(() => {
         setIsVisible(false);
         sessionStorage.setItem("wc26_intro_seen", "true");
-      }, 300);
+      }, 500);
     } catch (e) {
       setHasError(true);
     }
@@ -77,30 +78,59 @@ function IntroRevealBase() {
     >
       <div className="intro-reveal-content">
         
-        {/* Scene 1 & 2 */}
-        <div className="intro-reveal-scene-1">
-          <div className="intro-reveal-center-light"></div>
-          <h1 className="intro-reveal-title">WORLD CUP 26</h1>
-          <div className="intro-reveal-scene-2-content">
-            <div className="intro-reveal-divider"></div>
-            <h2 className="intro-reveal-subtitle">WELCOME TO THE TOURNAMENT</h2>
+        {/* Scene 1: The Darkness (Distant Light & Particles) */}
+        <div className="intro-reveal-scene-1-light"></div>
+        <div className="intro-reveal-particles"></div>
+
+        {/* Scene 2: Energy Awakens (SVG Swooshes) */}
+        <div className="intro-reveal-scene-2-swooshes">
+          <svg viewBox="0 0 800 400" className="intro-swoosh intro-swoosh-1">
+            <path d="M -100,300 C 200,400 600,0 900,100" fill="none" stroke="url(#goldGradient)" strokeWidth="4" filter="url(#glow)"/>
+          </svg>
+          <svg viewBox="0 0 800 400" className="intro-swoosh intro-swoosh-2">
+            <path d="M 900,350 C 600,250 200,450 -100,200" fill="none" stroke="url(#goldGradient)" strokeWidth="2" filter="url(#glow)"/>
+          </svg>
+          
+          <svg width="0" height="0">
+            <defs>
+              <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="transparent" />
+                <stop offset="50%" stopColor="#FFD700" />
+                <stop offset="100%" stopColor="transparent" />
+              </linearGradient>
+              <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="8" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+          </svg>
+        </div>
+
+        {/* Scene 3, 4, 5: Trophy Emergence, Ascent, Hero Moment */}
+        <div className="intro-reveal-trophy-container">
+          <div className="intro-reveal-trophy-spotlight"></div>
+          <div className="intro-reveal-trophy-rings">
+            <div className="intro-ring intro-ring-1"></div>
+            <div className="intro-ring intro-ring-2"></div>
+          </div>
+          <div className="intro-reveal-trophy-wrapper">
+            <Trophy className="intro-reveal-trophy-icon" strokeWidth={1.5} />
+            {/* SVG Mask for bottom-up reveal */}
+            <div className="intro-reveal-trophy-mask"></div>
+            {/* Specular highlights moving across the trophy */}
+            <div className="intro-reveal-trophy-shine"></div>
           </div>
         </div>
 
-        {/* Scene 3 */}
-        <div className="intro-reveal-scene-3">
-          <h2 className="intro-reveal-stagger-text">ROUND OF 32</h2>
-          <h2 className="intro-reveal-stagger-text delay-1">32 TEAMS</h2>
-          <h2 className="intro-reveal-stagger-text delay-2">16 MATCHES</h2>
-          <h2 className="intro-reveal-stagger-text delay-3 gold-text">1 CHAMPION</h2>
+        {/* Scene 6: Title Reveal */}
+        <div className="intro-reveal-title-container">
+          <div className="intro-reveal-title-swoosh"></div>
+          <h1 className="intro-reveal-title">WORLD CUP 26</h1>
         </div>
 
-        {/* Scene 4 */}
-        <div className="intro-reveal-scene-4">
-          <div className="intro-reveal-final-glow"></div>
-          <div className="intro-reveal-particles"></div>
-          <h1 className="intro-reveal-hero-text">WIN OR GO HOME</h1>
-          <h3 className="intro-reveal-sub-hero-text">YOUR JOURNEY STARTS NOW</h3>
+        {/* Scene 7: Final Statement */}
+        <div className="intro-reveal-statement-container">
+          <h3 className="intro-reveal-statement">ONE TROPHY. ONE CHAMPION.</h3>
         </div>
 
       </div>
