@@ -84,11 +84,9 @@ function IntroRevealBase() {
 
         {/* Ethereal Trophy Sequence */}
         <div className="intro-reveal-ethereal-trophy-container">
+          <div className="intro-reveal-ethereal-starburst"></div>
           <div className="intro-reveal-ethereal-glow"></div>
           <img src="/images/trophy.png" alt="World Cup Trophy" className="intro-reveal-ethereal-trophy-img" />
-          
-          {/* Ethereal light sweep passing over the trophy */}
-          <div className="intro-reveal-ethereal-light-sweep"></div>
         </div>
 
         {/* Title Reveal */}

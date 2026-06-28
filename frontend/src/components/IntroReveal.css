@@ -137,25 +137,37 @@
   mask-image: radial-gradient(ellipse at center, white 40%, transparent 70%);
 }
 
-.intro-reveal-ethereal-light-sweep {
+.intro-reveal-ethereal-starburst {
   position: absolute;
-  top: -50%;
-  left: 0;
-  width: 100%;
-  height: 200%;
-  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.15), transparent);
-  transform: translateY(100%);
-  z-index: 12;
-  pointer-events: none;
-  animation: ethereal-light-sweep-anim 10s ease-in-out forwards;
+  top: 50%;
+  left: 50%;
+  width: 800px;
+  height: 800px;
+  background: conic-gradient(
+    from 0deg, 
+    transparent 0deg, rgba(212,175,55,0.15) 10deg, transparent 20deg, 
+    rgba(212,175,55,0.08) 40deg, transparent 50deg, 
+    rgba(212,175,55,0.15) 60deg, transparent 80deg, 
+    rgba(212,175,55,0.1) 90deg, transparent 100deg, 
+    rgba(212,175,55,0.08) 120deg, transparent 150deg, 
+    rgba(212,175,55,0.15) 180deg, transparent 200deg, 
+    rgba(212,175,55,0.08) 240deg, transparent 270deg, 
+    rgba(212,175,55,0.1) 300deg, transparent 330deg, 
+    rgba(212,175,55,0.08) 350deg, transparent 360deg
+  );
+  border-radius: 50%;
+  z-index: -2;
+  opacity: 0;
+  animation: ethereal-starburst-anim 10s linear forwards;
+  mask-image: radial-gradient(circle, white 10%, transparent 60%);
+  -webkit-mask-image: radial-gradient(circle, white 10%, transparent 60%);
 }
 
-@keyframes ethereal-light-sweep-anim {
-  0%, 35% { transform: translateY(100%); opacity: 0; } /* Wait for trophy */
-  40% { opacity: 1; }
-  70% { transform: translateY(-100%); opacity: 1; }
-  75% { opacity: 0; }
-  100% { opacity: 0; transform: translateY(-100%); }
+@keyframes ethereal-starburst-anim {
+  0%, 35% { opacity: 0; transform: translate(-50%, -50%) rotate(0deg) scale(0.6); }
+  50% { opacity: 1; transform: translate(-50%, -50%) rotate(15deg) scale(1); }
+  85% { opacity: 1; transform: translate(-50%, -50%) rotate(40deg) scale(1.1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) rotate(50deg) scale(1.2); }
 }
 
 /* Title Reveal */
