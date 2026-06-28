@@ -79,6 +79,9 @@ function IntroRevealBase() {
         
         <div className="intro-reveal-ethereal-particles"></div>
 
+        {/* Welcome Phrase */}
+        <h2 className="intro-reveal-ethereal-welcome">WELCOME</h2>
+
         {/* Ethereal Trophy Sequence */}
         <div className="intro-reveal-ethereal-trophy-container">
           <div className="intro-reveal-ethereal-glow"></div>
