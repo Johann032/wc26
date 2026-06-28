@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Star, Eye } from "lucide-react";
+import { Star, Eye, Trophy } from "lucide-react";
 import { useFetch } from "../hooks/useFetch";
 import { api } from "../api/client";
 
