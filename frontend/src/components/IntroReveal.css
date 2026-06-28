@@ -10,7 +10,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: opacity 0.5s ease-out;
+  transition: opacity 0.8s ease-out;
   opacity: 1;
   font-family: system-ui, -apple-system, sans-serif;
   overflow: hidden;
@@ -25,33 +25,14 @@
   position: relative;
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-/* ---------- SCENE 1: THE DARKNESS ---------- */
-
-.intro-reveal-scene-1-light {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 20px;
-  height: 20px;
-  background: radial-gradient(circle, rgba(255,215,0,0.6) 0%, rgba(212,175,55,0) 80%);
-  opacity: 0;
-  border-radius: 50%;
-  animation: s1-light-anim 10s linear forwards;
-}
-
-@keyframes s1-light-anim {
-  0% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
-  5% { opacity: 0.2; transform: translate(-50%, -50%) scale(5); }
-  15% { opacity: 0.8; transform: translate(-50%, -50%) scale(20); }
-  60% { opacity: 0.3; transform: translate(-50%, -50%) scale(40); }
-  65% { opacity: 0; transform: translate(-50%, -50%) scale(40); } /* Hero moment fades out bg */
-  100% { opacity: 0; transform: translate(-50%, -50%) scale(40); }
-}
-
-.intro-reveal-particles {
+/* Subtle background gold dust */
+.intro-reveal-ethereal-particles {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -62,316 +43,151 @@
   pointer-events: none;
   opacity: 0;
   background-image: 
-    radial-gradient(2px 2px at 20% 30%, #D4AF37 100%, transparent),
-    radial-gradient(1px 1px at 80% 40%, #FFD700 100%, transparent),
-    radial-gradient(3px 3px at 40% 70%, rgba(212,175,55,0.8) 100%, transparent),
-    radial-gradient(1px 1px at 60% 20%, #D4AF37 100%, transparent),
-    radial-gradient(2px 2px at 85% 80%, #FFD700 100%, transparent),
-    radial-gradient(1px 1px at 30% 90%, rgba(212,175,55,0.6) 100%, transparent),
-    radial-gradient(2px 2px at 10% 60%, #D4AF37 100%, transparent),
-    radial-gradient(1px 1px at 70% 60%, #FFD700 100%, transparent),
-    radial-gradient(3px 3px at 50% 40%, rgba(212,175,55,0.9) 100%, transparent);
-  background-size: 300px 300px;
-  animation: particles-float-anim 10s linear forwards;
+    radial-gradient(1.5px 1.5px at 30% 40%, rgba(212,175,55,0.7) 100%, transparent),
+    radial-gradient(1px 1px at 70% 60%, rgba(255,215,0,0.5) 100%, transparent),
+    radial-gradient(2px 2px at 40% 70%, rgba(212,175,55,0.4) 100%, transparent),
+    radial-gradient(1.5px 1.5px at 60% 20%, rgba(212,175,55,0.8) 100%, transparent);
+  background-size: 200px 200px;
+  animation: ethereal-particles-anim 10s linear forwards;
 }
 
-@keyframes particles-float-anim {
-  0% { opacity: 0; transform: translate(-50%, -50%) rotate(0deg) scale(1); }
-  10% { opacity: 0.3; transform: translate(-50%, -50%) rotate(2deg) scale(1.02); }
-  50% { opacity: 0.5; transform: translate(-50%, -50%) rotate(10deg) scale(1.1); }
-  65% { opacity: 0; transform: translate(-50%, -50%) rotate(13deg) scale(1.15); } /* Hero moment freeze/fade */
-  95% { opacity: 0; transform: translate(-50%, -50%) rotate(15deg) scale(1.2); }
-  98% { opacity: 0.8; transform: translate(-50%, 0%) rotate(15deg) scale(1.2); } /* Scene 8 sweep */
-  100% { opacity: 0; transform: translate(-50%, 100%) rotate(15deg) scale(1.2); }
+@keyframes ethereal-particles-anim {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+  20% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.05); }
+  80% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.15); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
 }
 
-/* ---------- SCENE 2: ENERGY AWAKENS ---------- */
-
-.intro-reveal-scene-2-swooshes {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
-  pointer-events: none;
+/* Ethereal Trophy Sequence */
+.intro-reveal-ethereal-trophy-container {
+  position: relative;
+  width: 350px;
+  height: 450px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  opacity: 0;
+  animation: ethereal-trophy-container-anim 10s ease-in-out forwards;
 }
 
-.intro-swoosh {
+@keyframes ethereal-trophy-container-anim {
+  0% { opacity: 0; transform: translateY(30px) scale(0.9); }
+  20% { opacity: 1; transform: translateY(0) scale(1); }
+  85% { opacity: 1; transform: translateY(-10px) scale(1.05); }
+  100% { opacity: 0; transform: translateY(-30px) scale(1.1); }
+}
+
+.intro-reveal-ethereal-glow {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 120vw;
-  max-width: 1200px;
-  height: auto;
+  width: 400px;
+  height: 500px;
+  background: radial-gradient(ellipse, rgba(212,175,55,0.15) 0%, transparent 60%);
+  z-index: -1;
   opacity: 0;
+  animation: ethereal-glow-anim 10s ease-in-out forwards;
 }
 
-.intro-swoosh path {
-  stroke-dasharray: 2000;
-  stroke-dashoffset: 2000;
-}
-
-.intro-swoosh-1 {
-  animation: swoosh-fade 1.5s 1.5s forwards;
-}
-.intro-swoosh-1 path {
-  animation: swoosh-draw 1.5s 1.5s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
-}
-
-.intro-swoosh-2 {
-  animation: swoosh-fade 1.5s 1.8s forwards;
-}
-.intro-swoosh-2 path {
-  animation: swoosh-draw 1.5s 1.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
-}
-
-@keyframes swoosh-fade {
-  0% { opacity: 0; }
-  20% { opacity: 1; }
-  80% { opacity: 1; }
+@keyframes ethereal-glow-anim {
+  0%, 10% { opacity: 0; }
+  30% { opacity: 1; }
+  85% { opacity: 1; }
   100% { opacity: 0; }
 }
 
-@keyframes swoosh-draw {
-  0% { stroke-dashoffset: 2000; }
-  100% { stroke-dashoffset: 0; }
-}
-
-/* ---------- SCENE 3 & 4 & 5: TROPHY EMERGENCE, ASCENT, HERO MOMENT ---------- */
-
-.intro-reveal-trophy-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  height: 400px;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.intro-reveal-trophy-wrapper {
-  position: relative;
-  width: 250px;
-  height: 350px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* Ascent rotation (5s to 6.5s) */
-  animation: trophy-ascent-anim 10s linear forwards;
-}
-
-.intro-reveal-trophy-icon {
+.intro-reveal-ethereal-trophy-img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  /* CRITICAL: Crush blacks so they become pure #000000, then mix-blend-mode perfectly drops it out */
+  filter: contrast(1.3) brightness(0.9);
   mix-blend-mode: screen;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
-  /* Feather out the edges so no faint square box remains */
-  -webkit-mask-image: radial-gradient(ellipse at center, white 55%, transparent 75%);
-  mask-image: radial-gradient(ellipse at center, white 55%, transparent 75%);
-  animation: trophy-icon-reveal 10s linear forwards;
+  /* CRITICAL: Aggressive feathering so NO square boundaries can exist */
+  -webkit-mask-image: radial-gradient(ellipse at center, white 40%, transparent 70%);
+  mask-image: radial-gradient(ellipse at center, white 40%, transparent 70%);
 }
 
-@keyframes trophy-icon-reveal {
-  0%, 30% { clip-path: inset(100% 0 0 0); } /* Hidden bottom-up reveal */
-  50%, 95% { clip-path: inset(0 0 0 0); }
-  96%, 100% { clip-path: inset(0 0 0 0); opacity: 0.8; } /* Dissolve into particles */
-}
-
-@keyframes trophy-ascent-anim {
-  0%, 50% { transform: scale(1) rotate(0deg) translateY(20px); } /* 0 to 5s */
-  65% { transform: scale(1.15) rotate(5deg) translateY(0px); filter: brightness(1.2); } /* 6.5s Ascent */
-  80% { transform: scale(1.15) rotate(5deg) translateY(0px); filter: brightness(1.5) drop-shadow(0 0 30px #FFD700); } /* Hero moment */
-  95% { transform: scale(1.15) rotate(5deg) translateY(0px); filter: brightness(1); }
-  100% { transform: scale(0.9) rotate(0deg) translateY(50px); filter: brightness(0); opacity: 0; } /* Dissolve */
-}
-
-.intro-reveal-trophy-shine {
+.intro-reveal-ethereal-light-sweep {
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-  transform: skewX(-20deg);
-  animation: trophy-shine-anim 10s linear forwards;
-}
-
-@keyframes trophy-shine-anim {
-  0%, 40% { left: -100%; opacity: 0; }
-  45% { opacity: 1; }
-  55% { left: 200%; opacity: 1; }
-  100% { left: 200%; opacity: 0; }
-}
-
-.intro-reveal-trophy-spotlight {
-  position: absolute;
-  top: -300px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 400px;
-  height: 600px;
-  background: radial-gradient(ellipse at top, rgba(255,215,0,0.3) 0%, transparent 70%);
-  clip-path: polygon(20% 0, 80% 0, 100% 100%, 0% 100%);
-  opacity: 0;
-  z-index: -1;
-  animation: spotlight-anim 10s linear forwards;
-}
-
-@keyframes spotlight-anim {
-  0%, 35% { opacity: 0; }
-  50% { opacity: 0.4; } /* End of emergence */
-  65% { opacity: 0.8; top: -200px; } /* Hero moment spotlight down */
-  80% { opacity: 0.8; top: -200px; }
-  90% { opacity: 0; }
-  100% { opacity: 0; }
-}
-
-.intro-reveal-trophy-rings {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotateX(70deg);
-  width: 250px;
-  height: 250px;
-  z-index: -1;
-}
-
-.intro-ring {
-  position: absolute;
-  top: 0;
+  top: -50%;
   left: 0;
   width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  border-top-color: #D4AF37;
-  border-bottom-color: rgba(212,175,55,0.3);
-  opacity: 0;
+  height: 200%;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.15), transparent);
+  transform: translateY(100%);
+  z-index: 12;
+  pointer-events: none;
+  animation: ethereal-light-sweep-anim 10s ease-in-out forwards;
 }
 
-.intro-ring-1 {
-  animation: ring-anim-1 10s linear forwards;
-}
-.intro-ring-2 {
-  width: 300px;
-  height: 300px;
-  top: -25px;
-  left: -25px;
-  border-top-color: rgba(255,215,0,0.8);
-  border-bottom-color: transparent;
-  animation: ring-anim-2 10s linear forwards;
+@keyframes ethereal-light-sweep-anim {
+  0%, 20% { transform: translateY(100%); opacity: 0; }
+  25% { opacity: 1; }
+  60% { transform: translateY(-100%); opacity: 1; }
+  65% { opacity: 0; }
+  100% { opacity: 0; transform: translateY(-100%); }
 }
 
-@keyframes ring-anim-1 {
-  0%, 50% { opacity: 0; transform: rotateZ(0deg); }
-  65% { opacity: 1; transform: rotateZ(180deg); }
-  80% { opacity: 0; transform: rotateZ(360deg); } /* Fade out during hero */
-  100% { opacity: 0; }
-}
-
-@keyframes ring-anim-2 {
-  0%, 52% { opacity: 0; transform: rotateZ(360deg); }
-  65% { opacity: 0.6; transform: rotateZ(180deg); }
-  80% { opacity: 0; transform: rotateZ(0deg); }
-  100% { opacity: 0; }
-}
-
-
-/* ---------- SCENE 6 & 7: TITLE & STATEMENT REVEAL ---------- */
-
-.intro-reveal-title-container {
+/* Title Reveal */
+.intro-reveal-ethereal-title-container {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: calc(50% + 200px);
   width: 100%;
-  z-index: 20;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.intro-reveal-title-swoosh {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 0%;
-  height: 120px;
-  background: linear-gradient(90deg, transparent, rgba(255,215,0,0.15), transparent);
-  filter: blur(10px);
-  z-index: -1;
-  animation: title-swoosh-anim 10s linear forwards;
-}
-
-@keyframes title-swoosh-anim {
-  0%, 78% { width: 0%; opacity: 0; }
-  82% { width: 100%; opacity: 1; }
-  95% { width: 100%; opacity: 0; }
-  100% { width: 100%; opacity: 0; }
-}
-
-.intro-reveal-title {
-  color: #FFFFFF;
-  font-size: 5rem;
-  font-weight: 900;
-  letter-spacing: 16px;
-  margin: 0;
-  text-align: center;
-  text-transform: uppercase;
-  text-shadow: 0 10px 30px rgba(0,0,0,0.9), 0 0 20px rgba(212,175,55,0.6);
-  opacity: 0;
-  transform: scale(0.95);
-  animation: final-title-anim 10s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-@keyframes final-title-anim {
-  0%, 79% { opacity: 0; transform: scale(0.9) translateY(20px); }
-  84% { opacity: 1; transform: scale(1) translateY(0); }
-  95% { opacity: 1; transform: scale(1.02) translateY(0); }
-  100% { opacity: 0; transform: scale(1.05) translateY(-20px); }
-}
-
-.intro-reveal-statement-container {
-  position: absolute;
-  top: calc(50% + 80px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
   z-index: 20;
 }
 
-.intro-reveal-statement {
-  color: #D4AF37;
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: 12px;
+.intro-reveal-ethereal-title {
+  color: #FFFFFF;
+  font-size: 3.5rem;
+  font-weight: 300; /* Much more elegant and modern font weight */
+  letter-spacing: 20px;
   margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0 0 30px rgba(212,175,55,0.4);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: ethereal-title-anim 10s ease-in-out forwards;
+}
+
+.intro-reveal-ethereal-subtitle {
+  color: #D4AF37;
+  font-size: 1.2rem;
+  font-weight: 400;
+  letter-spacing: 14px;
+  margin: 1rem 0 0 0;
   text-align: center;
   text-transform: uppercase;
   opacity: 0;
   transform: translateY(10px);
-  animation: final-statement-anim 10s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation: ethereal-subtitle-anim 10s ease-in-out forwards;
 }
 
-@keyframes final-statement-anim {
-  0%, 84% { opacity: 0; transform: translateY(10px); }
-  88% { opacity: 1; transform: translateY(0); }
-  95% { opacity: 1; transform: translateY(0); }
+@keyframes ethereal-title-anim {
+  0%, 40% { opacity: 0; transform: translateY(20px); }
+  55% { opacity: 1; transform: translateY(0); }
+  85% { opacity: 1; transform: translateY(-5px); }
+  100% { opacity: 0; transform: translateY(-20px); }
+}
+
+@keyframes ethereal-subtitle-anim {
+  0%, 50% { opacity: 0; transform: translateY(10px); }
+  65% { opacity: 1; transform: translateY(0); }
+  85% { opacity: 1; transform: translateY(-2px); }
   100% { opacity: 0; transform: translateY(-10px); }
 }
 
-
-/* Mobile Responsiveness */
+/* Mobile */
 @media (max-width: 768px) {
-  .intro-reveal-title { font-size: 2.5rem; letter-spacing: 8px; }
-  .intro-reveal-statement { font-size: 1rem; letter-spacing: 6px; top: calc(50% + 50px); }
-  .intro-reveal-trophy-wrapper { width: 180px; height: 260px; }
+  .intro-reveal-ethereal-trophy-container { width: 250px; height: 350px; }
+  .intro-reveal-ethereal-title { font-size: 1.8rem; letter-spacing: 12px; }
+  .intro-reveal-ethereal-subtitle { font-size: 0.8rem; letter-spacing: 8px; margin-top: 0.5rem; }
+  .intro-reveal-ethereal-title-container { top: calc(50% + 150px); }
 }

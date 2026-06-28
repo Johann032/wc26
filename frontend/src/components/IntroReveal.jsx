@@ -77,57 +77,21 @@ function IntroRevealBase() {
     >
       <div className="intro-reveal-content">
         
-        {/* Scene 1: The Darkness (Distant Light & Particles) */}
-        <div className="intro-reveal-scene-1-light"></div>
-        <div className="intro-reveal-particles"></div>
+        <div className="intro-reveal-ethereal-particles"></div>
 
-        {/* Scene 2: Energy Awakens (SVG Swooshes) */}
-        <div className="intro-reveal-scene-2-swooshes">
-          <svg viewBox="0 0 800 400" className="intro-swoosh intro-swoosh-1">
-            <path d="M -100,300 C 200,400 600,0 900,100" fill="none" stroke="url(#goldGradient)" strokeWidth="4" filter="url(#glow)"/>
-          </svg>
-          <svg viewBox="0 0 800 400" className="intro-swoosh intro-swoosh-2">
-            <path d="M 900,350 C 600,250 200,450 -100,200" fill="none" stroke="url(#goldGradient)" strokeWidth="2" filter="url(#glow)"/>
-          </svg>
+        {/* Ethereal Trophy Sequence */}
+        <div className="intro-reveal-ethereal-trophy-container">
+          <div className="intro-reveal-ethereal-glow"></div>
+          <img src="/images/trophy.png" alt="World Cup Trophy" className="intro-reveal-ethereal-trophy-img" />
           
-          <svg width="0" height="0">
-            <defs>
-              <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="transparent" />
-                <stop offset="50%" stopColor="#FFD700" />
-                <stop offset="100%" stopColor="transparent" />
-              </linearGradient>
-              <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="8" result="blur" />
-                <feComposite in="SourceGraphic" in2="blur" operator="over" />
-              </filter>
-            </defs>
-          </svg>
+          {/* Ethereal light sweep passing over the trophy */}
+          <div className="intro-reveal-ethereal-light-sweep"></div>
         </div>
 
-        {/* Scene 3, 4, 5: Trophy Emergence, Ascent, Hero Moment */}
-        <div className="intro-reveal-trophy-container">
-          <div className="intro-reveal-trophy-spotlight"></div>
-          <div className="intro-reveal-trophy-rings">
-            <div className="intro-ring intro-ring-1"></div>
-            <div className="intro-ring intro-ring-2"></div>
-          </div>
-          <div className="intro-reveal-trophy-wrapper">
-            <img src="/images/trophy.png" alt="World Cup Trophy" className="intro-reveal-trophy-icon" />
-            {/* Specular highlights moving across the trophy */}
-            <div className="intro-reveal-trophy-shine"></div>
-          </div>
-        </div>
-
-        {/* Scene 6: Title Reveal */}
-        <div className="intro-reveal-title-container">
-          <div className="intro-reveal-title-swoosh"></div>
-          <h1 className="intro-reveal-title">WORLD CUP 26</h1>
-        </div>
-
-        {/* Scene 7: Final Statement */}
-        <div className="intro-reveal-statement-container">
-          <h3 className="intro-reveal-statement">ONE TROPHY. ONE CHAMPION.</h3>
+        {/* Title Reveal */}
+        <div className="intro-reveal-ethereal-title-container">
+          <h1 className="intro-reveal-ethereal-title">WORLD CUP 26</h1>
+          <h3 className="intro-reveal-ethereal-subtitle">ONE TROPHY. ONE CHAMPION.</h3>
         </div>
 
       </div>
