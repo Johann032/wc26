@@ -1,7 +1,14 @@
 import { Link } from "react-router-dom";
-import { Trophy, Hammer } from "lucide-react";
+import { Trophy } from "lucide-react";
+import { useFetch } from "../hooks/useFetch";
+import { api } from "../api/client";
 
 export default function JackpotCard({ tournamentId }) {
+  const { data: stats, error } = useFetch(
+    () => (tournamentId ? api.getJackpotStats(tournamentId) : Promise.resolve(null)),
+    [tournamentId]
+  );
+
   return (
     <div
       style={{
@@ -21,7 +28,7 @@ export default function JackpotCard({ tournamentId }) {
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
         <Trophy size={24} fill="var(--color-gold)" color="#000" />
         <h2 style={{ margin: 0, fontSize: "1.25rem", color: "var(--color-gold)", textTransform: "uppercase", letterSpacing: "1px" }}>
-          WORLD CUP JACKPOT
+          🏆 WORLD CUP JACKPOT
         </h2>
       </div>
       
@@ -29,24 +36,44 @@ export default function JackpotCard({ tournamentId }) {
         45 BONUS POINTS AVAILABLE
       </p>
 
-      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "0.5rem", background: "rgba(0,0,0,0.4)", padding: "0.75rem", borderRadius: "var(--radius-sm)", border: "1px solid rgba(255,255,255,0.1)" }}>
-        <Hammer size={16} color="var(--color-gold)" />
-        <span style={{ fontSize: "0.9rem", color: "rgba(255,255,255,0.9)" }}>Currently under construction until Round of 32.</span>
-      </div>
+      {error ? (
+        <div style={{ fontSize: "0.85rem", color: "var(--color-error)", fontStyle: "italic", padding: "0.5rem", background: "rgba(255,0,0,0.1)", borderRadius: "var(--radius-sm)" }}>
+          Temporarily unavailable.
+        </div>
+      ) : (
+        <>
+          <p style={{ margin: 0, fontSize: "0.95rem", color: "var(--color-text)" }}>
+            <strong style={{ color: "var(--color-gold)" }}>Only 3 Special Questions</strong>
+            <br />
+            <span style={{ fontSize: "0.85rem", opacity: 0.8 }}>Only One Chance.</span>
+          </p>
+
+          {stats && (
+            <div style={{ display: "flex", gap: "1.5rem", fontSize: "0.85rem", opacity: 0.9 }}>
+              <div>
+                <strong>Completed:</strong> {stats?.completed_questions || 0}/{stats?.total_questions || 0}
+              </div>
+              <div>
+                <strong>Participants:</strong> {stats?.participants || 0}/{stats?.total_users || 0}
+              </div>
+            </div>
+          )}
+        </>
+      )}
 
       <Link
         to={tournamentId ? `/tournaments/${tournamentId}/jackpot` : "/jackpot"}
         className="btn btn--primary"
         style={{
           marginTop: "0.5rem",
-          background: "transparent",
-          color: "var(--color-gold)",
-          border: "1px solid var(--color-gold)",
+          background: "var(--color-gold)",
+          color: "#000",
+          border: "none",
           fontWeight: 600,
           textAlign: "center"
         }}
       >
-        View Details
+        View Jackpot Challenge
       </Link>
     </div>
   );
