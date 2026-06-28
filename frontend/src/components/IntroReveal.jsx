@@ -86,7 +86,7 @@ function IntroRevealBase() {
         <div className="intro-reveal-ethereal-trophy-container">
           <div className="intro-reveal-ethereal-starburst"></div>
           <div className="intro-reveal-ethereal-glow"></div>
-          <img src="/images/trophy.png" alt="World Cup Trophy" className="intro-reveal-ethereal-trophy-img" />
+          <img src="/images/trophy-transparent.png" alt="World Cup Trophy" className="intro-reveal-ethereal-trophy-img" />
         </div>
 
         {/* Title Reveal */}
