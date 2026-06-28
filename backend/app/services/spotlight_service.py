@@ -154,3 +154,75 @@ class SpotlightService:
       "participants": participants,
       "total_users": total_users
     }
+
+  @staticmethod
+  def create_question(data):
+    if 'lock_time' in data and data['lock_time']:
+      if isinstance(data['lock_time'], str):
+        from datetime import datetime
+        data['lock_time'] = datetime.fromisoformat(data['lock_time'].replace('Z', '+00:00'))
+    
+    question = SpotlightQuestion(**data)
+    db.session.add(question)
+    db.session.commit()
+    return question.to_dict()
+
+  @staticmethod
+  def update_question(question_id, data):
+    question = SpotlightQuestion.query.get(question_id)
+    if not question:
+      return {'error': 'Question not found'}, 404
+      
+    if 'lock_time' in data and data['lock_time']:
+      if isinstance(data['lock_time'], str):
+        from datetime import datetime
+        data['lock_time'] = datetime.fromisoformat(data['lock_time'].replace('Z', '+00:00'))
+
+    for key, value in data.items():
+      setattr(question, key, value)
+      
+    db.session.commit()
+    return question.to_dict(), 200
+
+  @staticmethod
+  def delete_question(question_id):
+    question = SpotlightQuestion.query.get(question_id)
+    if not question:
+      return {'error': 'Question not found'}, 404
+      
+    db.session.delete(question)
+    db.session.commit()
+    return {'message': 'Question deleted'}, 200
+
+  @staticmethod
+  def set_question_result(question_id, correct_answers_json):
+    question = SpotlightQuestion.query.get(question_id)
+    if not question:
+      return {'error': 'Question not found'}, 404
+      
+    question.correct_answers_json = correct_answers_json
+    
+    scoring_rules = question.options_json.get('scoring', {})
+    
+    predictions = SpotlightPrediction.query.filter_by(question_id=question_id).all()
+    for p in predictions:
+      correct_count = 0
+      if question.question_type == 'categorical':
+        for cat, correct_ans in correct_answers_json.items():
+          if isinstance(p.answers_json, dict) and p.answers_json.get(cat) == correct_ans:
+            correct_count += 1
+      else:
+        user_ans_set = set(p.answers_json) if isinstance(p.answers_json, list) else set()
+        correct_ans_set = set(correct_answers_json) if isinstance(correct_answers_json, list) else set()
+        correct_count = len(user_ans_set.intersection(correct_ans_set))
+        
+      # Lookup points based on correct_count
+      str_count = str(correct_count)
+      if str_count in scoring_rules:
+        p.awarded_points = int(scoring_rules[str_count])
+      else:
+        # Default fallback: if not in rules, give 0
+        p.awarded_points = 0
+        
+    db.session.commit()
+    return {'message': 'Results saved and scores calculated', 'predictions_updated': len(predictions)}, 200

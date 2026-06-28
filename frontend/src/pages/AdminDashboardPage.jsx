@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { api } from "../api/client";
 import { useFetch } from "../hooks/useFetch";
 import Alert from "../components/Alert";
+import AdminJackpotTab from "../components/AdminJackpotTab";
 import {
   BarChart3, Trophy, Users, Swords, HelpCircle, CheckSquare,
   Plus, Trash2, Save, Archive, RefreshCw, UserPlus, UserCheck, UserX, Key, MessageSquare, Copy
@@ -675,6 +676,7 @@ export default function AdminDashboardPage() {
     { id: "users", label: "Users", icon: Users },
     { id: "matches", label: "Matches", icon: Swords },
     { id: "questions", label: "Questions", icon: HelpCircle },
+    { id: "jackpot", label: "Jackpot", icon: Trophy },
     { id: "results", label: "Results", icon: CheckSquare },
     { id: "participation", label: "Participation", icon: Users },
     { id: "communications", label: "Communications", icon: MessageSquare },
@@ -1024,6 +1026,14 @@ export default function AdminDashboardPage() {
             </>
           )}
         </div>
+      )}
+
+      {/* JACKPOT */}
+      {activeSection === "jackpot" && (
+        <AdminJackpotTab 
+          activeTournaments={activeTournaments}
+          notify={notify}
+        />
       )}
 
       {/* RESULTS */}

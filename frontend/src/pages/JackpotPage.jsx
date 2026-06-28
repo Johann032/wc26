@@ -122,7 +122,7 @@ export default function JackpotPage() {
           🏆 World Cup Jackpot
         </h1>
         <p style={{ margin: "0.5rem 0 0 0", fontStyle: "italic", opacity: 0.9 }}>
-          45 BONUS POINTS AVAILABLE
+          45 BONUS POINTS
         </p>
         <div style={{ marginTop: "1rem" }}>
           <TournamentSelect value={activeTournamentId} onChange={(id) => setTournamentId(id)} />

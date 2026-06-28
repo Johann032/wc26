@@ -109,6 +109,23 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ question_id, answers_json }),
     }),
+  createSpotlightQuestion: (data) =>
+    request("/spotlight/admin/questions", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  updateSpotlightQuestion: (id, data) =>
+    request(`/spotlight/admin/questions/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    }),
+  deleteSpotlightQuestion: (id) =>
+    request(`/spotlight/admin/questions/${id}`, { method: "DELETE" }),
+  setSpotlightQuestionResult: (id, correct_answers_json) =>
+    request(`/spotlight/admin/questions/${id}/result`, {
+      method: "POST",
+      body: JSON.stringify({ correct_answers_json }),
+    }),
   getJackpotStandings: async (tournamentId) => {
     return request(`/spotlight/leaderboard/${tournamentId}`);
   },
