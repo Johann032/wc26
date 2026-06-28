@@ -15,9 +15,14 @@ import InsightsPage from "./pages/InsightsPage";
 import MatchBreakdownPage from "./pages/MatchBreakdownPage";
 import JackpotPage from "./pages/JackpotPage";
 
+const introComponents = import.meta.glob("./components/IntroReveal.jsx", { eager: true });
+const IntroReveal = introComponents["./components/IntroReveal.jsx"]?.default;
+
 export default function App() {
   return (
-    <Routes>
+    <>
+      {IntroReveal && <IntroReveal />}
+      <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route
         path="/*"
@@ -50,5 +55,6 @@ export default function App() {
         }
       />
     </Routes>
+    </>
   );
 }

@@ -1,0 +1,189 @@
+.intro-reveal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #0B0B0B;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.3s ease-out;
+  opacity: 1;
+}
+
+.intro-reveal-fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-reveal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Base Phase Class - all hidden initially */
+.intro-reveal-phase-1,
+.intro-reveal-phase-2,
+.intro-reveal-phase-3 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  opacity: 0;
+}
+
+/* Phase 1: 0s - 1s */
+.intro-reveal-phase-1 {
+  animation: phase-1-anim 3s linear forwards;
+}
+
+.intro-reveal-title {
+  color: #D4AF37;
+  font-size: 4rem;
+  font-weight: 900;
+  letter-spacing: 12px;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+}
+
+/* Phase 2: 1s - 2s */
+.intro-reveal-phase-2 {
+  animation: phase-2-anim 3s linear forwards;
+}
+
+.intro-reveal-subtitle {
+  color: #FFFFFF;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 6px;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: phase-2-text-reveal 3s linear forwards;
+}
+
+.intro-reveal-sweep-line {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+  animation: sweep-line-anim 3s linear forwards;
+}
+
+/* Phase 3: 2s - 3s */
+.intro-reveal-phase-3 {
+  animation: phase-3-anim 3s linear forwards;
+}
+
+.intro-reveal-emphasis {
+  color: #FFFFFF;
+  font-size: 3.5rem;
+  font-weight: 900;
+  letter-spacing: 8px;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  transform: scale(0.9);
+  animation: phase-3-scale 3s linear forwards;
+}
+
+/* Stadium Glow */
+.intro-reveal-stadium-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0) 60%);
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  animation: stadium-glow-anim 3s linear forwards;
+}
+
+/* Keyframes */
+
+@keyframes phase-1-anim {
+  0% { opacity: 0; transform: translate(-50%, -40%); }
+  10% { opacity: 1; transform: translate(-50%, -50%); }
+  30% { opacity: 1; transform: translate(-50%, -50%); }
+  35% { opacity: 0; transform: translate(-50%, -50%); }
+  100% { opacity: 0; transform: translate(-50%, -50%); }
+}
+
+@keyframes sweep-line-anim {
+  0%, 32% { width: 0; opacity: 0; }
+  35% { width: 0; opacity: 1; }
+  45% { width: 300px; opacity: 1; }
+  60% { width: 800px; opacity: 0; }
+  100% { width: 800px; opacity: 0; }
+}
+
+@keyframes phase-2-anim {
+  0%, 33% { opacity: 0; }
+  35% { opacity: 1; }
+  60% { opacity: 1; }
+  65% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes phase-2-text-reveal {
+  0%, 38% { opacity: 0; transform: translateY(20px); }
+  45% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes phase-3-anim {
+  0%, 63% { opacity: 0; }
+  68% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { opacity: 1; } /* fade-out handled by wrapper state at 2.5s */
+}
+
+@keyframes phase-3-scale {
+  0%, 65% { transform: scale(0.9); }
+  100% { transform: scale(1.1); }
+}
+
+@keyframes stadium-glow-anim {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .intro-reveal-title {
+    font-size: 2.2rem;
+    letter-spacing: 6px;
+  }
+  .intro-reveal-subtitle {
+    font-size: 1.5rem;
+    letter-spacing: 4px;
+  }
+  .intro-reveal-emphasis {
+    font-size: 2rem;
+    letter-spacing: 5px;
+  }
+}
