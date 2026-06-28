@@ -114,8 +114,6 @@ function IntroRevealBase() {
           </div>
           <div className="intro-reveal-trophy-wrapper">
             <img src="/images/trophy.png" alt="World Cup Trophy" className="intro-reveal-trophy-icon" />
-            {/* SVG Mask for bottom-up reveal */}
-            <div className="intro-reveal-trophy-mask"></div>
             {/* Specular highlights moving across the trophy */}
             <div className="intro-reveal-trophy-shine"></div>
           </div>
