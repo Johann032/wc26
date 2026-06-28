@@ -45,6 +45,10 @@ class MatchService:
     if status not in ("scheduled", "locked", "live", "finished"):
       return None, "Invalid status"
 
+    stage = data.get("stage", "GROUP")
+    if stage not in ("GROUP", "R32", "R16", "QF", "SF", "THIRD_PLACE", "FINAL"):
+      return None, "Invalid stage"
+
     score1, score1_err = self._parse_score(data.get("score1"))
     if score1_err:
       return None, score1_err
@@ -58,6 +62,7 @@ class MatchService:
       "team2": team2,
       "kickoff_time": kickoff_time,
       "status": status,
+      "stage": stage,
       "score1": score1,
       "score2": score2,
     })
@@ -95,6 +100,10 @@ class MatchService:
       if data["status"] not in ("scheduled", "locked", "live", "finished"):
         return None, "Invalid status"
       updates["status"] = data["status"]
+    if "stage" in data:
+      if data["stage"] not in ("GROUP", "R32", "R16", "QF", "SF", "THIRD_PLACE", "FINAL"):
+        return None, "Invalid stage"
+      updates["stage"] = data["stage"]
     if "score1" in data:
       score1, err = self._parse_score(data["score1"])
       if err:
