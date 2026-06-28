@@ -95,6 +95,8 @@
   justify-content: center;
   z-index: 10;
   opacity: 0;
+  /* CRITICAL FIX: Force the entire container into screen blend mode to prevent iOS Safari dark shading artifacts */
+  mix-blend-mode: screen;
   animation: ethereal-trophy-container-anim 10s ease-in-out forwards;
 }
 
@@ -129,9 +131,11 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  /* CRITICAL: Crush blacks so they become pure #000000, then mix-blend-mode perfectly drops it out */
-  filter: contrast(1.3) brightness(0.9);
+  /* CRITICAL: Crush blacks aggressively so they become pure #000000 on mobile devices */
+  filter: contrast(1.5) brightness(0.85);
   mix-blend-mode: screen;
+  /* Hardware accelerate to fix iOS mask rendering bugs */
+  transform: translate3d(0, 0, 0);
   /* CRITICAL: Aggressive feathering so NO square boundaries can exist */
   -webkit-mask-image: radial-gradient(ellipse at center, white 40%, transparent 70%);
   mask-image: radial-gradient(ellipse at center, white 40%, transparent 70%);
