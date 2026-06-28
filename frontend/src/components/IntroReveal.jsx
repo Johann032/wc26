@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Trophy } from "lucide-react";
 import "./IntroReveal.css";
 
 class IntroErrorBoundary extends React.Component {
@@ -114,7 +113,7 @@ function IntroRevealBase() {
             <div className="intro-ring intro-ring-2"></div>
           </div>
           <div className="intro-reveal-trophy-wrapper">
-            <Trophy className="intro-reveal-trophy-icon" strokeWidth={1.5} />
+            <img src="/images/trophy.png" alt="World Cup Trophy" className="intro-reveal-trophy-icon" />
             {/* SVG Mask for bottom-up reveal */}
             <div className="intro-reveal-trophy-mask"></div>
             {/* Specular highlights moving across the trophy */}
