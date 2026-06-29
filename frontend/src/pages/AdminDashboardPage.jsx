@@ -438,6 +438,33 @@ export default function AdminDashboardPage() {
       { text: "Which team will have more offsides?", type: "multiple_choice", choices: [t1, t2, "Equal"] }
     ];
 
+    const KNOCKOUT_POOL = [
+      // GOALS
+      { text: "Will both teams score?", type: "yes_no" },
+      { text: "Which team will score first?", type: "multiple_choice", choices: [t1, t2, "No Goals"] },
+      { text: "How many goals will be scored?", type: "multiple_choice", choices: ["0-1", "2-3", "4-5", "6+"] },
+      { text: "Will there be a goal after the 75th minute?", type: "yes_no" },
+      { text: "Will a goal be scored in both halves?", type: "yes_no" },
+      { text: "Which half will have more goals?", type: "multiple_choice", choices: ["First Half", "Second Half", "Same Number", "No Goals"] },
+      { text: "Will there be a goal in stoppage time?", type: "yes_no" },
+      // PENALTIES & EXTRA TIME
+      { text: "Will the match go to extra time?", type: "yes_no" },
+      { text: "Will the match go to penalties?", type: "yes_no" },
+      { text: "Will a penalty be awarded during the match?", type: "yes_no" },
+      { text: "Which team will win the penalty shootout?", type: "multiple_choice", choices: [t1, t2, "No Shootout"] },
+      { text: "How will the match be decided?", type: "multiple_choice", choices: ["Regular Time", "Extra Time", "Penalties"] },
+      // CORNERS
+      { text: "Which team will have more corners?", type: "multiple_choice", choices: [t1, t2, "Equal"] },
+      { text: "How many total corners will there be?", type: "multiple_choice", choices: ["0-7", "8-11", "12-15", "16+"] },
+      { text: "Will there be a corner in the first 15 minutes?", type: "yes_no" },
+      { text: "Which half will have more corners?", type: "multiple_choice", choices: ["First Half", "Second Half", "Equal"] },
+      // CARDS
+      { text: "Will there be a red card?", type: "yes_no" },
+      { text: "Will both teams receive a yellow card?", type: "yes_no" },
+      { text: "Which team will receive more yellow cards?", type: "multiple_choice", choices: [t1, t2, "Equal"] },
+      { text: "How many yellow cards will be shown?", type: "multiple_choice", choices: ["0-2", "3-4", "5-6", "7+"] }
+    ];
+
     const q1 = {
       match_id: selectedMatch,
       question_text: "Who will win the match?",
@@ -456,23 +483,28 @@ export default function AdminDashboardPage() {
       return arr;
     };
 
-    const shuffledA = shuffle(TIER_A);
-    const shuffledB = shuffle(TIER_B);
-
     let selectedQuestions = [];
-    
-    // Prefer Tier A (80% chance per slot), occasionally Tier B (20% chance per slot)
-    const pickTier = () => Math.random() < 0.8 ? "A" : "B";
-    
-    const choice1 = pickTier();
-    const choice2 = pickTier();
+    const isKnockout = ["Round of 32", "Round of 16", "Quarter Finals", "Semi Finals", "Third Place", "Final"].includes(match.stage) || match.stage !== "GROUP";
 
-    if (choice1 === "A" && choice2 === "A") {
-      selectedQuestions = [shuffledA[0], shuffledA[1]];
-    } else if (choice1 === "B" && choice2 === "B") {
-      selectedQuestions = [shuffledB[0], shuffledB[1]];
+    if (isKnockout) {
+      const shuffledKnockout = shuffle(KNOCKOUT_POOL);
+      selectedQuestions = [shuffledKnockout[0], shuffledKnockout[1]];
     } else {
-      selectedQuestions = [shuffledA[0], shuffledB[0]];
+      const shuffledA = shuffle(TIER_A);
+      const shuffledB = shuffle(TIER_B);
+      
+      // Prefer Tier A (80% chance per slot), occasionally Tier B (20% chance per slot)
+      const pickTier = () => Math.random() < 0.8 ? "A" : "B";
+      const choice1 = pickTier();
+      const choice2 = pickTier();
+
+      if (choice1 === "A" && choice2 === "A") {
+        selectedQuestions = [shuffledA[0], shuffledA[1]];
+      } else if (choice1 === "B" && choice2 === "B") {
+        selectedQuestions = [shuffledB[0], shuffledB[1]];
+      } else {
+        selectedQuestions = [shuffledA[0], shuffledB[0]];
+      }
     }
 
     const selA = selectedQuestions[0];
