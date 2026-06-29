@@ -4,7 +4,19 @@ import { useFetch } from "../hooks/useFetch";
 import TournamentSelect from "../components/TournamentSelect";
 import { Eye, CheckCircle, Lock, Users, Trophy } from "lucide-react";
 
+const MAINTENANCE_MODE = true;
+
 export default function JackpotPage() {
+  if (MAINTENANCE_MODE) {
+    return (
+      <div className="jackpot-page" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", padding: "20px", textAlign: "center" }}>
+        <h1 style={{ color: "var(--color-gold, #ffd700)", marginBottom: "1rem", fontSize: "2rem", textTransform: "uppercase", letterSpacing: "2px" }}>Maintenance Break</h1>
+        <p style={{ color: "var(--color-text-muted, #a0aec0)", maxWidth: "400px", lineHeight: "1.6" }}>
+          We are upgrading the servers for the Jackpot Challenge. We'll be right back!
+        </p>
+      </div>
+    );
+  }
   const [tournamentId, setTournamentId] = useState(null);
   const [answers, setAnswers] = useState({});
   const [submitting, setSubmitting] = useState(null);

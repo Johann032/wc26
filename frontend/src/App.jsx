@@ -18,20 +18,7 @@ import JackpotPage from "./pages/JackpotPage";
 const introComponents = import.meta.glob("./components/IntroReveal.jsx", { eager: true });
 const IntroReveal = introComponents["./components/IntroReveal.jsx"]?.default;
 
-const MAINTENANCE_MODE = true;
-
 export default function App() {
-  if (MAINTENANCE_MODE) {
-    return (
-      <div style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", padding: "20px", textAlign: "center", background: "#0a0a0a", color: "#fff", fontFamily: "system-ui, sans-serif" }}>
-        <h1 style={{ color: "var(--color-gold, #ffd700)", marginBottom: "1rem", fontSize: "2rem", textTransform: "uppercase", letterSpacing: "2px" }}>Maintenance Break</h1>
-        <p style={{ color: "var(--color-text-muted, #a0aec0)", maxWidth: "400px", lineHeight: "1.6" }}>
-          We are upgrading the servers for the Jackpot Challenge. We'll be right back!
-        </p>
-      </div>
-    );
-  }
-
   return (
     <>
       {IntroReveal && <IntroReveal />}
