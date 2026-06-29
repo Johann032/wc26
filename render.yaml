@@ -2,7 +2,7 @@ services:
   - type: web
     name: wc26-backend
     env: python
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r requirements.txt && cd backend && python fix_db_schema.py
     startCommand: gunicorn run:app
     envVars:
       - key: DATABASE_URL
