@@ -118,6 +118,64 @@ export default function AdminJackpotTab({ activeTournaments, notify }) {
     }
   };
 
+  const handleGenerateEliteEight = async () => {
+    try {
+      const matches = await api.getMatchesForTournament(selectedTournament);
+      const r16Matches = matches.filter(m => m.stage === "R16");
+      
+      if (r16Matches.length === 0) {
+        notify("No Round of 16 matches found in this tournament.", "error");
+        return;
+      }
+      
+      const teams = new Set();
+      let earliestKickoff = null;
+      
+      r16Matches.forEach(m => {
+        if (m.team1) teams.add(m.team1);
+        if (m.team2) teams.add(m.team2);
+        
+        const kickoff = new Date(m.kickoff_time);
+        if (!earliestKickoff || kickoff < earliestKickoff) {
+          earliestKickoff = kickoff;
+        }
+      });
+      
+      if (earliestKickoff) {
+        earliestKickoff.setMinutes(earliestKickoff.getMinutes() - 1); // 1 minute before
+      }
+      
+      const teamArray = Array.from(teams).sort();
+      
+      const scoringRules = {
+        "8": 15,
+        "7": 12,
+        "6": 10,
+        "5": 7,
+        "4": 5,
+        "3": 3,
+        "2": 1,
+        "1": 0,
+        "0": 0
+      };
+      
+      setQuestionForm({
+        ...questionForm,
+        title: "🏆 ELITE EIGHT",
+        description: "Predict the EIGHT teams that will qualify for the Quarter Finals.\n\nThink carefully — every correct prediction brings you closer to the Jackpot!",
+        question_type: "multiple_choice",
+        num_selections: 8,
+        max_points: 15,
+        lock_time: earliestKickoff ? earliestKickoff.toISOString().slice(0, 16) : "",
+        options_json: JSON.stringify({ choices: teamArray, scoring: scoringRules }, null, 2)
+      });
+      
+      notify("Elite Eight configuration generated! Review and click Create.");
+    } catch (err) {
+      notify("Failed to generate Elite Eight: " + err.message, "error");
+    }
+  };
+
   return (
     <div className="animate-in">
       <div style={{ marginBottom: "2rem" }}>
@@ -148,9 +206,14 @@ export default function AdminJackpotTab({ activeTournaments, notify }) {
       {selectedTournament && (
         <>
           <form className="card form" onSubmit={handleCreateQuestion}>
-            <h3 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <Plus size={16} /> Create Jackpot Question
-            </h3>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <h3 style={{ display: "flex", alignItems: "center", gap: "0.5rem", margin: 0 }}>
+                <Plus size={16} /> Create Jackpot Question
+              </h3>
+              <button type="button" className="btn btn--outline" onClick={handleGenerateEliteEight} style={{ fontSize: "0.85rem", padding: "0.4rem 0.75rem" }}>
+                Generate R16 Elite Eight
+              </button>
+            </div>
             <div className="form-row">
               <label className="form-label" style={{ flex: 2 }}>
                 Title

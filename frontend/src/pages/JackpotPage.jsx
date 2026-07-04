@@ -168,7 +168,13 @@ export default function JackpotPage() {
                         </p>
                       )}
                       <p className="text-muted" style={{ margin: 0, fontSize: "0.9rem" }}>
-                        Select EXACTLY {q.num_selections || 1} • {q.max_points || 0} Points Possible
+                        {q.question_type === "categorical" ? (
+                          `Select EXACTLY ${q.num_selections || 1} • ${q.max_points || 0} Points Possible`
+                        ) : q.num_selections > 1 ? (
+                          `(${(selected || []).length} / ${q.num_selections} Selected) • ${q.max_points || 0} Points Possible`
+                        ) : (
+                          `Select EXACTLY ${q.num_selections || 1} • ${q.max_points || 0} Points Possible`
+                        )}
                       </p>
                     </div>
                     {q.is_locked ? (
