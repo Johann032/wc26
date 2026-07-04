@@ -6,7 +6,7 @@ import PredictionForm from "../components/PredictionForm";
 import { ChevronLeft, Clock, Target } from "lucide-react";
 
 function getStageScoringText(stage) {
-  if (["SF", "THIRD_PLACE", "FINAL"].includes(stage)) {
+  if (["R32", "R16", "QF", "SF", "THIRD_PLACE", "FINAL"].includes(stage)) {
     return "+3 Correct • -2 Wrong";
   }
   return "+3 Correct • 0 Wrong";
