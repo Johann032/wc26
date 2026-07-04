@@ -36,10 +36,14 @@ class LeaderboardRepository:
                 "total_points": stats["total_points"],
                 "exact_predictions": stats["exact_predictions"],
                 "correct_predictions": stats["correct_predictions"],
+                "incorrect_predictions": stats["incorrect_predictions"],
+                "negative_predictions": stats["negative_predictions"],
                 "earliest_submission": stats["earliest_submission"],
                 "previous_total_points": stats["previous_total_points"],
                 "previous_exact_predictions": stats["previous_exact_predictions"],
                 "previous_correct_predictions": stats["previous_correct_predictions"],
+                "previous_incorrect_predictions": stats["previous_incorrect_predictions"],
+                "previous_negative_predictions": stats["previous_negative_predictions"],
                 "previous_earliest_submission": stats["previous_earliest_submission"],
             })
 
@@ -73,6 +77,8 @@ class LeaderboardRepository:
             entry.pop("previous_total_points", None)
             entry.pop("previous_exact_predictions", None)
             entry.pop("previous_correct_predictions", None)
+            entry.pop("previous_incorrect_predictions", None)
+            entry.pop("previous_negative_predictions", None)
             entry.pop("previous_earliest_submission", None)
             entry.pop("previous_rank", None)
 
@@ -101,16 +107,30 @@ class LeaderboardRepository:
             "total_points": 0,
             "exact_predictions": 0,
             "correct_predictions": 0,
+            "incorrect_predictions": 0,
+            "negative_predictions": 0,
             "earliest_submission": None,
             "previous_total_points": 0,
             "previous_exact_predictions": 0,
             "previous_correct_predictions": 0,
+            "previous_incorrect_predictions": 0,
+            "previous_negative_predictions": 0,
             "previous_earliest_submission": None,
         }
 
         for prediction, question, match in predictions:
             pts = prediction.awarded_points or 0
-            is_correct = pts > 0
+            
+            # A prediction is only scored if a correct answer is actually set in the DB
+            is_scored = bool(question.correct_answer)
+            # A prediction is only answered if the user submitted a non-empty string
+            is_answered = bool(prediction.answer)
+            
+            is_correct = is_scored and is_answered and prediction.answer == question.correct_answer
+            is_incorrect = is_scored and is_answered and prediction.answer != question.correct_answer
+            is_negative = pts < 0
+            
+            # Exact score is technically a subset of exactly matching the result
             is_exact = is_correct and question.question_type == "exact_score"
             sub_time = prediction.submitted_at
 
@@ -118,6 +138,10 @@ class LeaderboardRepository:
             stats["total_points"] += pts
             if is_correct:
                 stats["correct_predictions"] += 1
+            if is_incorrect:
+                stats["incorrect_predictions"] += 1
+            if is_negative:
+                stats["negative_predictions"] += 1
             if is_exact:
                 stats["exact_predictions"] += 1
             if sub_time:
@@ -129,6 +153,10 @@ class LeaderboardRepository:
                 stats["previous_total_points"] += pts
                 if is_correct:
                     stats["previous_correct_predictions"] += 1
+                if is_incorrect:
+                    stats["previous_incorrect_predictions"] += 1
+                if is_negative:
+                    stats["previous_negative_predictions"] += 1
                 if is_exact:
                     stats["previous_exact_predictions"] += 1
                 if sub_time:

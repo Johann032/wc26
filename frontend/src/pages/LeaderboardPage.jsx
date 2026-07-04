@@ -122,7 +122,7 @@ export default function LeaderboardPage() {
                     <div className="podium__name">{entry.display_name}</div>
                     <div className="podium__points">{entry.total_points} pts</div>
                     <div className="podium__stats">
-                      {entry.exact_predictions} exact · {entry.correct_predictions} correct
+                      {entry.correct_predictions} correct · {entry.incorrect_predictions} incorrect · {entry.negative_predictions} negative
                     </div>
                     <div style={{ marginTop: "0.5rem" }}>
                       <MovementIndicator movement={entry.movement} verbose={true} />
@@ -140,9 +140,10 @@ export default function LeaderboardPage() {
                 <tr>
                   <th>Rank</th>
                   <th>Player</th>
-                  <th>Points</th>
-                  <th>Exact</th>
                   <th>Correct</th>
+                  <th>Incorrect</th>
+                  <th>Negative</th>
+                  <th>Points</th>
                 </tr>
               </thead>
               <tbody>
@@ -171,6 +172,9 @@ export default function LeaderboardPage() {
                         <MovementIndicator movement={entry.movement} />
                       </div>
                     </td>
+                    <td>{entry.correct_predictions}</td>
+                    <td>{entry.incorrect_predictions}</td>
+                    <td>{entry.negative_predictions}</td>
                     <td
                       style={{
                         fontWeight: 700,
@@ -179,8 +183,6 @@ export default function LeaderboardPage() {
                     >
                       {entry.total_points}
                     </td>
-                    <td>{entry.exact_predictions}</td>
-                    <td>{entry.correct_predictions}</td>
                   </tr>
                 ))}
               </tbody>
