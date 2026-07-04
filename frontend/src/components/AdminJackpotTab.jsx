@@ -143,8 +143,19 @@ export default function AdminJackpotTab({ activeTournaments, notify }) {
       
       if (earliestKickoff) {
         earliestKickoff.setMinutes(earliestKickoff.getMinutes() - 1); // 1 minute before
+        // Safety for testing: if the earliest kickoff is already in the past, 
+        // default to 24 hours from now so the question doesn't auto-lock immediately.
+        if (earliestKickoff < new Date()) {
+          earliestKickoff = new Date(Date.now() + 24 * 60 * 60 * 1000); 
+        }
       }
       
+      const getLocalISOString = (date) => {
+        if (!date) return "";
+        const tzOffset = date.getTimezoneOffset() * 60000;
+        return new Date(date.getTime() - tzOffset).toISOString().slice(0, 16);
+      };
+
       const teamArray = Array.from(teams).sort();
       
       const scoringRules = {
@@ -166,7 +177,7 @@ export default function AdminJackpotTab({ activeTournaments, notify }) {
         question_type: "multiple_choice",
         num_selections: 8,
         max_points: 15,
-        lock_time: earliestKickoff ? earliestKickoff.toISOString().slice(0, 16) : "",
+        lock_time: getLocalISOString(earliestKickoff),
         options_json: JSON.stringify({ choices: teamArray, scoring: scoringRules }, null, 2)
       });
       
