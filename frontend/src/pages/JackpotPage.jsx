@@ -139,8 +139,27 @@ export default function JackpotPage() {
           ) : (
             safeQuestions.map((q) => {
               const selected = answers[q.id];
-              const safeOptions = q.options_json || [];
-              const safeCatOptions = q.options_json || {};
+              let parsedOptions = q.options_json;
+              if (typeof parsedOptions === "string") {
+                try {
+                  parsedOptions = JSON.parse(parsedOptions);
+                } catch (e) {
+                  parsedOptions = null;
+                }
+              }
+
+              let safeOptions = [];
+              if (Array.isArray(parsedOptions)) {
+                safeOptions = parsedOptions;
+              } else if (parsedOptions && Array.isArray(parsedOptions.choices)) {
+                safeOptions = parsedOptions.choices;
+              }
+
+              let safeCatOptions = {};
+              if (parsedOptions && typeof parsedOptions === "object" && !Array.isArray(parsedOptions) && !parsedOptions.choices) {
+                safeCatOptions = parsedOptions;
+              }
+
               const isComplete = q.question_type === "categorical"
                 ? Object.keys(selected || {}).length === (q.num_selections || 0)
                 : (selected || []).length === (q.num_selections || 0);
@@ -209,7 +228,9 @@ export default function JackpotPage() {
                     </div>
                   ) : (
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", gap: "0.5rem", marginBottom: "1.5rem" }}>
-                      {Array.isArray(safeOptions) && safeOptions.map((opt) => {
+                      {safeOptions.length === 0 ? (
+                        <div style={{ padding: "1rem", color: "var(--color-text-muted)", gridColumn: "1 / -1", textAlign: "center", fontStyle: "italic" }}>No options available.</div>
+                      ) : safeOptions.map((opt) => {
                         const isSelected = (selected || []).includes(opt);
                         return (
                           <div
@@ -300,12 +321,15 @@ export default function JackpotPage() {
               <p style={{ color: "rgba(255,255,255,0.7)", margin: 0 }}>No jackpot points awarded yet.</p>
             </div>
           ) : (
-            <div className="leaderboard-table">
-              <div className="leaderboard-table__row leaderboard-table__header">
-                <div className="leaderboard-table__col">Rank</div>
-                <div className="leaderboard-table__col" style={{ flex: 1 }}>Player</div>
-                <div className="leaderboard-table__col">Points</div>
-              </div>
+            <table className="jackpot-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Player</th>
+                  <th style={{ textAlign: "right" }}>Points</th>
+                </tr>
+              </thead>
+              <tbody>
               {safeLeaderboard.map((entry) => {
                 let badge = null;
                 if (entry.rank === 1) badge = "🥇";
@@ -313,20 +337,21 @@ export default function JackpotPage() {
                 else if (entry.rank === 3) badge = "🥉";
 
                 return (
-                  <div key={entry.user_id} className="leaderboard-table__row">
-                    <div className="leaderboard-table__col" style={{ fontWeight: "bold" }}>
-                      {entry.rank}
-                    </div>
-                    <div className="leaderboard-table__col" style={{ flex: 1, fontWeight: 500, display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                      {entry.display_name} {badge}
-                    </div>
-                    <div className="leaderboard-table__col" style={{ fontWeight: "bold", color: "var(--color-gold)" }}>
+                  <tr key={entry.user_id}>
+                    <td data-label="Rank" style={{ fontWeight: "bold" }}>
+                      {badge} {entry.rank}
+                    </td>
+                    <td data-label="Player" style={{ fontWeight: 500 }}>
+                      {entry.display_name}
+                    </td>
+                    <td data-label="Points" style={{ fontWeight: "bold", color: "var(--color-gold)", textAlign: "right" }}>
                       {entry.total_points || 0}
-                    </div>
-                  </div>
+                    </td>
+                  </tr>
                 );
               })}
-            </div>
+              </tbody>
+            </table>
           )}
         </div>
       </div>

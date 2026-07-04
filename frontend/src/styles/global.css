@@ -1574,3 +1574,86 @@ tr:hover td {
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* Jackpot Standings Table */
+.jackpot-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1rem;
+  background: rgba(0,0,0,0.2);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.jackpot-table th,
+.jackpot-table td {
+  padding: 1rem;
+  text-align: left;
+}
+
+.jackpot-table th {
+  background: rgba(255,215,0,0.1);
+  color: var(--color-gold);
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(255,215,0,0.2);
+}
+
+.jackpot-table td {
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 1rem;
+}
+
+.jackpot-table tbody tr:hover {
+  background: rgba(255,215,0,0.05);
+}
+
+/* Mobile Responsive Cards */
+@media (max-width: 768px) {
+  .jackpot-table, 
+  .jackpot-table thead, 
+  .jackpot-table tbody, 
+  .jackpot-table th, 
+  .jackpot-table td, 
+  .jackpot-table tr { 
+    display: block; 
+  }
+  
+  .jackpot-table thead tr { 
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  
+  .jackpot-table tr {
+    border: 1px solid rgba(255,215,0,0.2);
+    margin-bottom: 1rem;
+    border-radius: var(--radius-sm);
+    background: rgba(0,0,0,0.3);
+  }
+  
+  .jackpot-table td { 
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.05); 
+    position: relative;
+    padding-left: 50%; 
+    text-align: right !important;
+  }
+  
+  .jackpot-table td:before { 
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    width: 45%; 
+    padding-right: 10px; 
+    white-space: nowrap;
+    text-align: left;
+    font-weight: bold;
+    color: rgba(255,255,255,0.6);
+    content: attr(data-label);
+  }
+}
