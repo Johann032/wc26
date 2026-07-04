@@ -118,9 +118,6 @@ class LeaderboardRepository:
             "previous_earliest_submission": None,
         }
 
-        from app.services.scoring_service import ScoringService
-        scoring_service = ScoringService()
-
         for prediction, question, match in predictions:
             pts = prediction.awarded_points or 0
             
@@ -130,17 +127,19 @@ class LeaderboardRepository:
             
             is_correct = False
             is_incorrect = False
+            is_negative = False
             
             if is_evaluated and is_answered:
-                max_pts = scoring_service.calculate_points(question, question.correct_answer)
-                # Correct: Evaluated as fully correct (scored the maximum possible points)
-                if max_pts > 0 and pts >= max_pts:
+                # Correct: Positive points
+                if pts > 0:
                     is_correct = True
-                # Incorrect: Evaluated, incorrect (did not get max points), and received non-positive result
-                elif pts <= 0:
+                # Incorrect: Zero or negative points
+                else:
                     is_incorrect = True
                     
-            is_negative = pts < 0
+                # Negative: Less than zero points
+                if pts < 0:
+                    is_negative = True
             
             # Exact score is technically a subset of exactly matching the result
             is_exact = is_correct and question.question_type == "exact_score"
