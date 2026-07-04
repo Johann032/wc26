@@ -19,7 +19,7 @@ class ScoringService:
       return 0
 
     stage = question.match.stage if question.match else "GROUP"
-    if stage in ("SF", "THIRD_PLACE", "FINAL"):
+    if stage in ("R32", "R16", "QF", "SF", "THIRD_PLACE", "FINAL"):
       correct_points = 3
       wrong_points = -2
     else:
