@@ -228,6 +228,112 @@ export default function AdminJackpotTab({ activeTournaments, notify }) {
     }
   };
 
+  const handleGenerateFinalFour = async () => {
+    try {
+      const matches = await api.getMatchesForTournament(selectedTournament);
+      const qfMatches = matches.filter(m => m.stage === "QF");
+      
+      if (qfMatches.length === 0) {
+        notify("No Quarter Final matches found in this tournament.", "error");
+        return;
+      }
+      
+      const teams = new Set();
+      let earliestKickoff = null;
+      
+      qfMatches.forEach(m => {
+        if (m.team1) teams.add(m.team1);
+        if (m.team2) teams.add(m.team2);
+        
+        const kickoff = new Date(m.kickoff_time);
+        if (!earliestKickoff || kickoff < earliestKickoff) {
+          earliestKickoff = kickoff;
+        }
+      });
+      
+      if (earliestKickoff) {
+        earliestKickoff.setMinutes(earliestKickoff.getMinutes() - 1);
+      }
+      
+      const teamArray = Array.from(teams).sort();
+      
+      const scoringRules = {
+        "4": 15,
+        "3": 10,
+        "2": 5,
+        "1": 2,
+        "0": 0
+      };
+      
+      setQuestionForm({
+        ...questionForm,
+        title: "🔥 FINAL FOUR",
+        description: "Predict the FOUR teams that will qualify for the Semi Finals.",
+        question_type: "multiple_choice",
+        num_selections: 4,
+        max_points: 15,
+        lock_time: earliestKickoff ? earliestKickoff.toISOString().slice(0, 16) : "",
+        options_json: JSON.stringify({ choices: teamArray, scoring: scoringRules }, null, 2)
+      });
+      
+      notify("Final Four configuration generated! Review and click Create.");
+    } catch (err) {
+      notify("Failed to generate Final Four: " + err.message, "error");
+    }
+  };
+
+  const handleGenerateChampion = async () => {
+    try {
+      const matches = await api.getMatchesForTournament(selectedTournament);
+      const qfMatches = matches.filter(m => m.stage === "QF");
+      
+      if (qfMatches.length === 0) {
+        notify("No Quarter Final matches found in this tournament.", "error");
+        return;
+      }
+      
+      const teams = new Set();
+      let earliestKickoff = null;
+      
+      qfMatches.forEach(m => {
+        if (m.team1) teams.add(m.team1);
+        if (m.team2) teams.add(m.team2);
+        
+        const kickoff = new Date(m.kickoff_time);
+        if (!earliestKickoff || kickoff < earliestKickoff) {
+          earliestKickoff = kickoff;
+        }
+      });
+      
+      if (earliestKickoff) {
+        earliestKickoff.setMinutes(earliestKickoff.getMinutes() - 1);
+      }
+      
+      const teamArray = Array.from(teams).sort();
+      
+      const scoringRules = {
+        "1": 15,
+        "0": 0
+      };
+      
+      setQuestionForm({
+        ...questionForm,
+        title: "🏆 WORLD CHAMPION",
+        description: "Predict the ONE team that will win the FIFA World Cup Final.",
+        question_type: "multiple_choice",
+        num_selections: 1,
+        max_points: 15,
+        lock_time: earliestKickoff ? earliestKickoff.toISOString().slice(0, 16) : "",
+        options_json: JSON.stringify({ choices: teamArray, scoring: scoringRules }, null, 2)
+      });
+      
+      notify("World Champion configuration generated! Review and click Create.");
+    } catch (err) {
+      notify("Failed to generate World Champion: " + err.message, "error");
+    }
+  };
+
+
   return (
     <div className="animate-in">
       <div style={{ marginBottom: "2rem" }}>
@@ -265,6 +371,12 @@ export default function AdminJackpotTab({ activeTournaments, notify }) {
               <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
                 <button type="button" className="btn btn--outline" onClick={handleGenerateEliteEight} style={{ fontSize: "0.85rem", padding: "0.4rem 0.75rem" }}>
                   Generate R16 Elite Eight
+                </button>
+                <button type="button" className="btn btn--outline" onClick={handleGenerateFinalFour} style={{ fontSize: "0.85rem", padding: "0.4rem 0.75rem" }}>
+                  Generate QF Final Four
+                </button>
+                <button type="button" className="btn btn--outline" onClick={handleGenerateChampion} style={{ fontSize: "0.85rem", padding: "0.4rem 0.75rem" }}>
+                  Generate Champion (from QF)
                 </button>
                 <button type="button" className="btn btn--outline" onClick={handleGenerateSemiFinals} style={{ fontSize: "0.85rem", padding: "0.4rem 0.75rem" }}>
                   Generate Semi Final Jackpot
