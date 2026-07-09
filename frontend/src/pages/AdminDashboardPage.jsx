@@ -465,6 +465,17 @@ export default function AdminDashboardPage() {
       { text: "How many yellow cards will be shown?", type: "multiple_choice", choices: ["0-2", "3-4", "5-6", "7+"] }
     ];
 
+    const QF_POOL = [
+      { text: "Which team will have more possession?", type: "multiple_choice", choices: [t1, t2, "Equal"] },
+      { text: "Will there be a goal from outside the penalty area?", type: "yes_no" },
+      { text: "Which team will commit more fouls?", type: "multiple_choice", choices: [t1, t2, "Equal"] },
+      { text: "Will any player score 2 or more goals?", type: "yes_no" },
+      { text: "Which team will have the first shot on target?", type: "multiple_choice", choices: [t1, t2] },
+      { text: "Will there be an own goal?", type: "yes_no" },
+      { text: "Will the match be decided by a 1-goal margin?", type: "yes_no" },
+      { text: "Will either team keep a clean sheet?", type: "yes_no" }
+    ];
+
     const q1 = {
       match_id: selectedMatch,
       question_text: "Who will win the match?",
@@ -487,8 +498,13 @@ export default function AdminDashboardPage() {
     const isKnockout = ["Round of 32", "Round of 16", "Quarter Finals", "Semi Finals", "Third Place", "Final"].includes(match.stage) || match.stage !== "GROUP";
 
     if (isKnockout) {
-      const shuffledKnockout = shuffle(KNOCKOUT_POOL);
-      selectedQuestions = [shuffledKnockout[0], shuffledKnockout[1]];
+      if (match.stage === "QF") {
+        const shuffledQf = shuffle(QF_POOL);
+        selectedQuestions = [shuffledQf[0], shuffledQf[1]];
+      } else {
+        const shuffledKnockout = shuffle(KNOCKOUT_POOL);
+        selectedQuestions = [shuffledKnockout[0], shuffledKnockout[1]];
+      }
     } else {
       const shuffledA = shuffle(TIER_A);
       const shuffledB = shuffle(TIER_B);

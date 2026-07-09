@@ -176,6 +176,58 @@ export default function AdminJackpotTab({ activeTournaments, notify }) {
     }
   };
 
+  const handleGenerateSemiFinals = async () => {
+    try {
+      const matches = await api.getMatchesForTournament(selectedTournament);
+      const sfMatches = matches.filter(m => m.stage === "SF");
+      
+      if (sfMatches.length === 0) {
+        notify("No Semi Final matches found in this tournament.", "error");
+        return;
+      }
+      
+      const teams = new Set();
+      let earliestKickoff = null;
+      
+      sfMatches.forEach(m => {
+        if (m.team1) teams.add(m.team1);
+        if (m.team2) teams.add(m.team2);
+        
+        const kickoff = new Date(m.kickoff_time);
+        if (!earliestKickoff || kickoff < earliestKickoff) {
+          earliestKickoff = kickoff;
+        }
+      });
+      
+      if (earliestKickoff) {
+        earliestKickoff.setMinutes(earliestKickoff.getMinutes() - 1);
+      }
+      
+      const teamArray = Array.from(teams).sort();
+      
+      const scoringRules = {
+        "2": 15,
+        "1": 5,
+        "0": 0
+      };
+      
+      setQuestionForm({
+        ...questionForm,
+        title: "🏆 THE FINALISTS",
+        description: "Predict the TWO teams that will reach the FIFA World Cup Final.",
+        question_type: "multiple_choice",
+        num_selections: 2,
+        max_points: 15,
+        lock_time: earliestKickoff ? earliestKickoff.toISOString().slice(0, 16) : "",
+        options_json: JSON.stringify({ choices: teamArray, scoring: scoringRules }, null, 2)
+      });
+      
+      notify("Semi Final Jackpot configuration generated! Review and click Create.");
+    } catch (err) {
+      notify("Failed to generate Semi Final Jackpot: " + err.message, "error");
+    }
+  };
+
   return (
     <div className="animate-in">
       <div style={{ marginBottom: "2rem" }}>
@@ -206,13 +258,18 @@ export default function AdminJackpotTab({ activeTournaments, notify }) {
       {selectedTournament && (
         <>
           <form className="card form" onSubmit={handleCreateQuestion}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
               <h3 style={{ display: "flex", alignItems: "center", gap: "0.5rem", margin: 0 }}>
                 <Plus size={16} /> Create Jackpot Question
               </h3>
-              <button type="button" className="btn btn--outline" onClick={handleGenerateEliteEight} style={{ fontSize: "0.85rem", padding: "0.4rem 0.75rem" }}>
-                Generate R16 Elite Eight
-              </button>
+              <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                <button type="button" className="btn btn--outline" onClick={handleGenerateEliteEight} style={{ fontSize: "0.85rem", padding: "0.4rem 0.75rem" }}>
+                  Generate R16 Elite Eight
+                </button>
+                <button type="button" className="btn btn--outline" onClick={handleGenerateSemiFinals} style={{ fontSize: "0.85rem", padding: "0.4rem 0.75rem" }}>
+                  Generate Semi Final Jackpot
+                </button>
+              </div>
             </div>
             <div className="form-row">
               <label className="form-label" style={{ flex: 2 }}>
